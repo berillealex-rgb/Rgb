@@ -1,0 +1,1731 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Persona5 — Time Manager (v4.2 fixed)</title>
+
+  <meta name="theme-color" content="#e60012" />
+  <link rel="manifest" href='data:application/manifest+json,%7B%22name%22%3A%22Persona5%20Time%20Manager%22%2C%22short_name%22%3A%22P5%20Time%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230b0b0b%22%2C%22theme_color%22%3A%22%23e60012%22%7D'>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+/* Persona5main embarquée en base64 (police non accentuée, cf. unicode-range ci-dessous
+   qui bascule automatiquement sur Barlow Condensed / Inter pour les caractères accentués). */
+@font-face{
+  font-family: 'Persona5main';
+  src: url('data:font/ttf;base64,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') format('truetype');
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-007E;
+}
+
+/* ----------------- Core CSS (adapté) ----------------- */
+:root{
+  --red:#e60012;
+  --red-deep:#a3000c;
+  --black:#0b0b0d;
+  --white:#f6f4ef;
+  --ink:#111;
+  --nav-height:66px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{min-height:100vh;min-height:100dvh;}
+body{
+  background:var(--black);
+  color:var(--white);
+  font-family: "Barlow Condensed", "Inter", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing:antialiased;
+  user-select:none;
+  overflow:hidden;
+}
+
+/* Use Persona5 font for ransom headings when available, fallback to Barlow */
+.ransom{font-family:'Persona5main',"Barlow Condensed","Inter",system-ui, sans-serif;display:inline-block;white-space:nowrap}
+
+/* Background layers */
+#bg{position:fixed;inset:-6vmax;z-index:0;pointer-events:none;}
+.bg-layer{position:absolute;inset:0;will-change:transform;}
+/* stripes */
+#bg-stripes{
+  background:repeating-linear-gradient(115deg,
+    var(--red) 0 46px, var(--red-deep) 46px 52px,
+    var(--red) 52px 120px, #c4000f 120px 126px);
+  animation:stripeDrift 22s linear infinite;
+}
+@keyframes stripeDrift{from{background-position:0 0;}to{background-position:520px 0;}}
+/* halftone */
+#bg-halftone{
+  background-image:radial-gradient(circle, rgba(0,0,0,.35) 1.6px, transparent 1.7px);
+  background-size:14px 14px;
+  mix-blend-mode:multiply;
+  animation:halftoneDrift 30s linear infinite;
+}
+@keyframes halftoneDrift{from{background-position:0 0;}to{background-position:-140px 140px;}}
+/* vignette */
+#bg-vignette{
+  background:radial-gradient(ellipse at 32% 40%, transparent 30%, rgba(0,0,0,.72) 100%);
+}
+
+/* black slash */
+#slash{
+  position:fixed;z-index:1;inset:0;pointer-events:none;
+  background:var(--black);
+  clip-path:polygon(58% 0, 100% 0, 100% 100%, 40% 100%, 52% 62%, 45% 60%, 60% 24%, 51% 22%);
+  transition:clip-path .8s cubic-bezier(.8,0,.15,1);
+}
+body[data-screen]:not([data-screen="home"]) #slash{
+  clip-path:polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 62%, 0 60%, 0 24%, 0 22%);
+}
+
+/* shell & hud */
+#shell{position:relative;z-index:2;height:100vh;height:100dvh;display:flex;flex-direction:column;}
+#hud-top{display:flex;justify-content:space-between;align-items:flex-start;padding:calc(18px + env(safe-area-inset-top, 0px)) 20px 0;}
+.hud-tag{background:var(--black);color:var(--white);padding:6px 12px;transform:rotate(-2deg);font-weight:700;font-size:13px;box-shadow:4px 4px 0 rgba(0,0,0,.35);} 
+.hud-tag.alt{background:var(--white);color:var(--black);transform:rotate(1.5deg);}
+
+/* stage */
+#stage{flex:1;position:relative;overflow:hidden;}
+
+/* screens */
+.screen{
+  position:absolute;inset:0;padding:3vh 5vw;display:none;overflow-y:auto;overflow-x:hidden;
+  padding-bottom:calc(var(--nav-height) + 28px + env(safe-area-inset-bottom, 0px));
+}
+.screen.active{display:block;}
+.screen::-webkit-scrollbar{width:8px}
+.screen::-webkit-scrollbar-thumb{background:var(--red)}
+
+/* home specifics */
+#intro-eyebrow{font-size:clamp(13px,1.6vw,18px);letter-spacing:.5em;text-transform:uppercase;margin-bottom:1.2vh;font-weight:800;text-shadow:2px 2px 0 var(--black)}
+#big-name{line-height:.92;margin-bottom:2.5vh;}
+#big-name .ransom{font-size:clamp(40px,8.5vw,96px);display:block;font-weight:900;}
+#tagline{max-width:560px;font-size:clamp(14px,1.4vw,18px);line-height:1.45;background:var(--black);color:var(--white);padding:12px 18px;transform:rotate(-1deg);box-shadow:6px 6px 0 rgba(0,0,0,.3);}
+
+/* menu */
+#menu{margin-top:4vh;display:flex;flex-direction:column;align-items:flex-start;gap:.6vh;}
+.menu-item{background:none;border:0;color:var(--white);text-align:left;position:relative;padding:6px 14px;cursor:pointer;font-size:clamp(20px,4.2vw,42px);transform:translateX(-60px);opacity:0;}
+.loaded .menu-item{animation:menuIn .55s cubic-bezier(.2,1.2,.3,1) forwards}
+@keyframes menuIn{to{transform:translateX(0);opacity:1}}
+.menu-item .cursor-mark{position:absolute;right:-46px;top:50%;transform:translateY(-50%);opacity:0;color:var(--white)}
+.menu-item.sel .cursor-mark{opacity:1}
+
+/* ransom letters helper */
+.ransom .ch{display:inline-block;padding:0 .01em;transition:transform .15s; color:var(--white);} 
+
+/* sub screens chrome */
+.sub .screen-head{margin:1vh 0 3.5vh;position:relative;display:inline-block}
+.sub .screen-head .ransom{font-size:clamp(36px,6vw,74px);font-weight:900}
+.sub .screen-head::after{content:"";position:absolute;left:-6px;bottom:-10px;height:10px;width:105%;background:var(--red);transform:skewX(-24deg)}
+
+/* paper */
+.paper{max-width:760px;background:var(--white);color:var(--ink);padding:22px 26px;font-size:16px;line-height:1.5;clip-path:polygon(0 4%, 2% 0, 100% 0, 100% 94%, 98% 100%, 0 100%);transform:rotate(-.6deg);box-shadow:10px 10px 0 rgba(0,0,0,.55);margin-bottom:3vh}
+
+/* mobile-friendly paper (remove rotation and boost contrast/readability) */
+@media (max-width:520px){
+  .paper{transform:none;padding:14px;font-size:18px;line-height:1.45;}
+  #tagline{transform:none;padding:12px 14px;}
+  #big-name .ransom{font-size:clamp(28px,10vw,64px);} 
+}
+
+/* skills */
+.skill-group{margin-bottom:4vh;max-width:920px}
+.skill-row{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.skill-row .name{width:180px;flex-shrink:0;font-size:15px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.skill-bar{flex:1;height:20px;background:rgba(0,0,0,.55);position:relative;transform:skewX(-18deg);overflow:hidden;max-width:520px}
+.skill-bar .fill{position:absolute;inset:0;width:0;background:var(--white);background-image:repeating-linear-gradient(90deg,transparent 0 26px, rgba(230,0,18,.22) 26px 30px);transition:width .9s cubic-bezier(.2,1,.3,1)}
+.skill-row .lv{font-weight:900;width:70px;text-align:right}
+
+/* forms (planning / confidants) */
+.form-block{display:flex;flex-direction:column;gap:12px}
+.form-row{display:flex;gap:14px;flex-wrap:wrap}
+.form-row label{display:grid;grid-template-rows:30px auto;align-content:start;gap:4px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#333;flex:1;min-width:140px}
+/* formulaire "Ajouter un créneau" replié par défaut, ouvert via le bouton dédié */
+#slot-form.slot-form-hidden{display:none}
+.form-row input, .form-row select{
+  font:inherit;font-size:15px;font-weight:600;padding:8px 10px;border:2px solid var(--ink);background:#fff;color:var(--ink);
+}
+.form-row input:focus, .form-row select:focus{outline:2px solid var(--red)}
+.p5-btn{
+  align-self:flex-start;background:var(--red);color:var(--white);border:none;font-weight:800;text-transform:uppercase;letter-spacing:.03em;
+  padding:10px 22px;cursor:pointer;clip-path:polygon(0 0,100% 0,94% 100%,0 100%);transition:filter .15s;
+}
+.p5-btn:hover{filter:brightness(1.15)}
+.p5-btn:active{filter:brightness(.9)}
+
+/* slot / confidant cards */
+.item-card{
+  background:var(--white);color:var(--ink);padding:14px 18px;margin-bottom:10px;max-width:760px;
+  display:flex;align-items:center;gap:14px;box-shadow:6px 6px 0 rgba(0,0,0,.4);
+  clip-path:polygon(0 0,100% 0,100% 100%,3% 100%);
+}
+.item-card.done{opacity:.55}
+.item-card .main{flex:1;min-width:0}
+.item-card .title{font-weight:800;font-size:16px}
+.item-card .meta{font-size:12px;color:#555;text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.item-card .cat-tag{font-size:11px;font-weight:800;padding:2px 8px;color:var(--white);background:var(--red-deep);text-transform:uppercase;border-radius:0}
+.item-card .weight-tag{font-size:11px;font-weight:800;padding:2px 8px;color:var(--white);text-transform:uppercase;border-radius:0}
+.item-card .weight-leger{background:#6b6b6b}
+.item-card .weight-normal{background:#3a3a3a}
+.item-card .weight-important{background:var(--black)}
+.item-card .actions{display:flex;gap:8px;flex-shrink:0}
+.item-card .actions button{
+  border:none;font-weight:800;font-size:12px;text-transform:uppercase;padding:7px 12px;cursor:pointer;
+  clip-path:polygon(0 0,100% 0,88% 100%,0 100%);
+}
+.item-card .btn-done{background:var(--red);color:var(--white)}
+.item-card .btn-del{background:#ddd;color:#333}
+.day-heading{font-size:13px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;margin:18px 0 8px;color:var(--white)}
+.day-heading:first-child{margin-top:0}
+.empty-hint{color:#ccc;font-size:14px;margin-top:8px}
+
+/* échéances : badge + intensité croissante */
+.deadline-badge{font-size:11px;font-weight:900;padding:2px 8px;text-transform:uppercase;letter-spacing:.04em;color:var(--white);background:#555;margin-left:6px;display:inline-block}
+.item-card.dl-petit .deadline-badge{background:#6b6b6b}
+.item-card.dl-moyen .deadline-badge{background:#b35a00}
+.item-card.dl-majeur .deadline-badge{background:var(--red)}
+.item-card.dl-majeur{border-left:6px solid var(--red)}
+.item-card.dl-majeur.dl-active{animation:dlPulse 1.6s ease-in-out infinite}
+@keyframes dlPulse{0%,100%{box-shadow:6px 6px 0 rgba(0,0,0,.4)}50%{box-shadow:6px 6px 0 rgba(230,0,18,.55)}}
+.dl-countdown{font-weight:900}
+
+/* confidants : urgence */
+.urgency-badge{font-size:11px;font-weight:900;padding:2px 8px;text-transform:uppercase;color:var(--white);background:#4a7a3a;margin-left:6px;display:inline-block}
+.item-card.urg-ok .urgency-badge{background:#4a7a3a}
+.item-card.urg-soon .urgency-badge{background:#b35a00}
+.item-card.urg-late .urgency-badge{background:var(--red)}
+.goal-row{margin-top:8px;padding-top:8px;border-top:1px dashed rgba(0,0,0,.18);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.goal-row input[type="text"]{flex:1;min-width:140px;font:inherit;font-size:13px;padding:6px 8px;border:2px solid var(--ink);background:#fff;color:var(--ink)}
+.goal-done{font-size:11px;font-weight:900;color:var(--white);background:#4a7a3a;padding:2px 8px;text-transform:uppercase}
+.confidant-controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.confidant-controls select{font:inherit;font-size:13px;padding:6px 8px;background:var(--black);color:var(--white);border:1px solid rgba(255,255,255,.25)}
+
+/* récap de fin de journée */
+.recap-stat-line{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,0,0,.12);font-weight:700}
+.recap-section-title{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;margin:16px 0 6px;color:var(--red-deep)}
+.recap-section-title:first-child{margin-top:0}
+.recap-empty{color:#555;font-size:13px;font-style:italic}
+#recapTrigger{margin-top:10px}
+.fiche-section-title{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;margin:14px 0 8px;color:var(--red-deep);border-top:1px dashed rgba(0,0,0,.18);padding-top:10px}
+.fiche-section-title:first-of-type{border-top:none;padding-top:0;margin-top:0}
+.item-card.clickable{cursor:pointer}
+.item-card.clickable:hover{filter:brightness(1.04)}
+.contact-chip{font-size:12px;color:#444;margin-right:10px}
+
+/* filtres de source (planning) */
+.tab-filter{background:rgba(255,255,255,.06);color:var(--white);border:1px solid rgba(255,255,255,.2);font-weight:800;font-size:12px;text-transform:uppercase;padding:6px 12px;cursor:pointer;letter-spacing:.03em}
+.tab-filter.active{background:var(--red);border-color:var(--red)}
+.source-badge{font-size:11px;font-weight:900;padding:2px 8px;text-transform:uppercase;color:var(--white);margin-left:6px;display:inline-block}
+.source-badge.src-icloud{background:#2b6cb0}
+.source-badge.src-pronote{background:#2f855a}
+.item-card.readonly-source .actions .btn-del{display:none}
+
+/* gain popup (feedback "SAVOIR +2") */
+#gain-popup{
+  position:fixed;top:18%;left:50%;transform:translate(-50%,-50%) scale(.85);z-index:90;pointer-events:none;
+  background:var(--black);color:var(--white);padding:14px 34px;font-weight:900;font-size:clamp(22px,4vw,34px);
+  letter-spacing:.05em;clip-path:polygon(4% 0,100% 0,96% 100%,0 100%);border:3px solid var(--red);
+  opacity:0;transition:opacity .18s, transform .18s;
+}
+#gain-popup.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+
+/* Overlays modaux (suggestions / temps libre / journal / récap / fiche) */
+.overlay{
+  position:fixed;inset:0;z-index:80;
+  background:rgba(0,0,0,.72);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .2s ease;
+}
+.overlay.open{opacity:1;visibility:visible;pointer-events:auto}
+.menu-panel{
+  background:var(--white);color:var(--ink);
+  width:100%;max-width:560px;max-height:82vh;overflow-y:auto;
+  position:relative;
+  clip-path:polygon(0 3%, 3% 0, 100% 0, 100% 97%, 97% 100%, 0 100%);
+  box-shadow:14px 14px 0 rgba(0,0,0,.55);
+  transform:translateY(10px);
+  transition:transform .2s ease;
+}
+.overlay.open .menu-panel{transform:translateY(0)}
+.menu-heading{
+  background:var(--black);color:var(--white);
+  font-weight:900;text-transform:uppercase;letter-spacing:.05em;
+  padding:14px 20px;font-size:16px;
+}
+.menu-heading span{color:var(--red);font-weight:700;margin-left:8px;font-size:13px;text-transform:none;letter-spacing:0}
+.menu-list{list-style:none;padding:6px 0;margin:0}
+.menu-panel .menu-list li.menu-item{
+  color:var(--ink);width:100%;text-align:left;padding:12px 20px;font-size:16px;
+  transform:none;opacity:1;position:relative;display:flex;align-items:center;gap:10px;cursor:pointer;
+  border-bottom:1px solid rgba(0,0,0,.08);animation:none;
+}
+.menu-panel .menu-list li.menu-item:hover{background:rgba(230,0,18,.06)}
+.menu-panel .menu-list li.menu-item .icon{font-weight:900;color:var(--red);flex-shrink:0}
+.menu-panel .menu-list li.menu-item .txt .title{font-weight:800;font-size:15px}
+.menu-panel .menu-list li.menu-item .txt .sub{font-size:12px;color:#555;margin-top:2px}
+.menu-close{
+  display:block;width:100%;background:var(--red);color:var(--white);border:none;
+  font-weight:900;text-transform:uppercase;letter-spacing:.05em;padding:12px;cursor:pointer;
+}
+.menu-close:hover{filter:brightness(1.1)}
+.journal-head{display:flex;justify-content:space-between;align-items:center;background:var(--black);color:var(--white);padding:14px 20px;font-weight:900;text-transform:uppercase}
+.journal-head .accent{color:var(--red);font-size:12px;text-transform:none;font-weight:700;margin-left:6px}
+.journal-area{width:100%;min-height:220px;border:none;padding:18px 20px;font:inherit;font-size:16px;line-height:1.5;color:var(--ink);resize:vertical;display:block}
+.journal-area:focus{outline:2px solid var(--red)}
+.fiche-body{max-width:none !important;margin:0 !important;box-shadow:none !important;transform:none !important;clip-path:none !important;padding:20px !important}
+
+/* bottom nav — design flottant d'origine (dégradé + lift), icônes seules, toujours visible.
+   Se RÉDUIT (jamais ne disparaît) au scroll vers le bas ou quand une action a besoin de place. */
+.bottom-nav{
+  position:fixed;left:26px;right:26px;bottom:calc(4px + env(safe-area-inset-bottom, 0px));height:var(--nav-height);display:flex;gap:10px;align-items:center;justify-content:space-between;background:linear-gradient(180deg, rgba(0,0,0,0.62), rgba(255,255,255,0.02));border-radius:16px;padding:8px;box-shadow:0 20px 40px rgba(0,0,0,0.7);z-index:60;border:1px solid rgba(255,255,255,0.02);
+  transform-origin:center bottom;
+  transition:transform .38s cubic-bezier(.3,.8,.4,1);
+}
+.bottom-nav.compact{transform:scale(.82)}
+.tab{flex:1;display:flex;align-items:center;justify-content:center;color:var(--white);text-decoration:none;opacity:0.86;padding:10px;border-radius:10px;background:transparent;border:none;transition:transform .18s cubic-bezier(.2,.9,.2,1),box-shadow .18s,background .18s}
+.tab.active{transform:translateY(-6px);background:linear-gradient(135deg, rgba(230,0,18,0.12), rgba(255,255,255,0.02));box-shadow:0 10px 24px rgba(230,0,18,0.10);opacity:1}
+.tab-icon{width:24px;height:24px;display:block}
+
+/* Wipe overlay (uses same shapes as repo) */
+#wipe{position:fixed;inset:-10%;z-index:70;pointer-events:none}
+#wipe .pane{position:absolute;inset:0;transform:translateX(-130%) skewX(-14deg)}
+#wipe .p1{background:var(--red)}
+#wipe .p2{background:var(--black)}
+#wipe .p3{background:var(--white)}
+/* runtime wipe: 450ms total, swap at ~45% (JS coordinates) */
+#wipe.go .pane{animation:wipeAcross .45s cubic-bezier(.75,0,.2,1) forwards}
+#wipe.go .p2{animation-delay:.03s}
+#wipe.go .p1{animation-delay:.06s}
+@keyframes wipeAcross{0%{transform:translateX(-130%) skewX(-14deg)}45%{transform:translateX(0%) skewX(-14deg)}55%{transform:translateX(0%) skewX(-14deg)}100%{transform:translateX(130%) skewX(-14deg)}}
+#wipe .flash{position:absolute;inset:0;background:var(--white);opacity:0}
+#wipe.go .flash{animation:flash .45s linear forwards}
+@keyframes flash{0%,44%{opacity:0}48%{opacity:1}56%{opacity:0}100%{opacity:0}}
+
+/* accessible reduced motion */
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001s !important;transition-duration:.001s !important}}
+
+  </style>
+</head>
+<body data-screen="home" class="loaded">
+
+  <!-- background SVG layers (inline) -->
+  <div id="bg" aria-hidden="true">
+    <div class="bg-layer" id="bg-stripes"></div>
+    <svg class="bg-star" style="left:6%;top:8%;width:26vmax;height:26vmax" viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,0 60,35 98,35 68,57 78,94 50,72 22,94 32,57 2,35 40,35" fill="#000"/></svg>
+    <svg class="bg-star s2" style="right:4%;bottom:6%;width:34vmax;height:34vmax" viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,0 60,35 98,35 68,57 78,94 50,72 22,94 32,57 2,35 40,35" fill="#fff"/></svg>
+    <div class="bg-layer" id="bg-halftone"></div>
+    <div class="bg-layer" id="bg-vignette"></div>
+  </div>
+
+  <div id="slash" aria-hidden="true"></div>
+
+  <!-- Wipe overlay -->
+  <div id="wipe" aria-hidden="true">
+    <div class="pane p3"></div>
+    <div class="pane p2"></div>
+    <div class="pane p1"></div>
+    <div class="flash"></div>
+  </div>
+
+  <div id="gain-popup" aria-live="polite"></div>
+
+  <div id="shell">
+    <div id="hud-top">
+      <div class="hud-tag display">PERSONA5</div>
+      <div class="hud-tag alt">Time Manager</div>
+    </div>
+
+    <div id="stage">
+      <!-- HOME -->
+      <section id="screen-home" class="screen active" aria-label="Accueil">
+        <div id="intro-eyebrow">Gestion du temps</div>
+
+        <h1 id="big-name" aria-hidden="true">
+          <span class="ransom" data-ransom="PERSONA5"></span>
+          <span class="ransom" data-ransom="PLANNER"></span>
+        </h1>
+
+        <div id="tagline" class="paper">
+          Gestion intelligente des créneaux, progression façon Confidants (Savoir / Diligence / Charme), détection des temps libres et suggestions.
+        </div>
+
+        <nav id="menu" aria-label="Menu principal" style="margin-top:22px">
+          <button class="menu-item sel" data-target="calendar">
+            <span class="ransom"><span class="ch box">P</span><span class="ch">lanning</span></span>
+          </button>
+
+          <button class="menu-item" data-target="confidants">
+            <span class="ransom"><span class="ch box">C</span><span class="ch">onfidants</span></span>
+            <span class="cursor-mark">◀</span>
+          </button>
+
+          <button class="menu-item" data-target="stats">
+            <span class="ransom"><span class="ch box">S</span><span class="ch">tats</span></span>
+            <span class="cursor-mark">◀</span>
+          </button>
+
+          <button class="menu-item" data-target="settings">
+            <span class="ransom"><span class="ch box">O</span><span class="ch">ptions</span></span>
+            <span class="cursor-mark">◀</span>
+          </button>
+        </nav>
+
+        <button class="banner-btn" id="openMenu" aria-haspopup="true" aria-controls="suggestions-menu">
+          Tu as du temps libre — Suggestions rapides
+          <small>Ex : SLOT 14:00 — 15:30 · TAP TO SELECT</small>
+        </button>
+
+        <button class="p5-btn" id="recapTrigger">Récap du jour</button>
+
+      </section>
+
+      <!-- CALENDAR -->
+      <section id="screen-calendar" class="screen sub" aria-label="Velvet Room">
+        <div class="screen-head"><span class="ransom" data-ransom="VELVET ROOM"></span></div>
+        <button class="back-hint" data-back>Esc · Retour</button>
+
+        <button type="button" class="p5-btn" id="toggleSlotForm">+ Ajouter un créneau</button>
+
+        <form id="slot-form" class="paper form-block slot-form-hidden">
+          <div class="form-row">
+            <label>Titre
+              <input type="text" id="slot-title" placeholder="Ex : Réviser maths" required>
+            </label>
+            <label>Catégorie
+              <select id="slot-cat">
+                <option value="savoir">Savoir</option>
+                <option value="audace">Audace</option>
+                <option value="bienveillance">Bienveillance</option>
+                <option value="habilete">Habileté</option>
+                <option value="charme">Charme</option>
+                <option value="">Aucune</option>
+              </select>
+            </label>
+            <label>Poids de la tâche
+              <select id="slot-weight">
+                <option value="leger">Léger</option>
+                <option value="normal" selected>Normal</option>
+                <option value="important">Important</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-row">
+            <label>Jour
+              <select id="slot-day">
+                <option value="0">Lundi</option>
+                <option value="1">Mardi</option>
+                <option value="2">Mercredi</option>
+                <option value="3">Jeudi</option>
+                <option value="4">Vendredi</option>
+                <option value="5">Samedi</option>
+                <option value="6">Dimanche</option>
+              </select>
+            </label>
+            <label>Début
+              <input type="time" id="slot-start" value="18:00" required>
+            </label>
+            <label>Fin
+              <input type="time" id="slot-end" value="19:00" required>
+            </label>
+          </div>
+          <div class="form-row">
+            <label style="flex-direction:row;align-items:center;gap:8px">
+              <input type="checkbox" id="slot-is-deadline" style="width:auto">
+              Échéance ?
+            </label>
+            <label>Importance
+              <select id="slot-deadline-importance">
+                <option value="petit">Petit contrôle / rendu simple</option>
+                <option value="moyen">Devoir / évaluation moyenne</option>
+                <option value="majeur">Examen majeur / gros projet</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-row">
+            <label>Date de l'échéance
+              <input type="date" id="slot-deadline-date">
+            </label>
+            <label>Fenêtre d'anticipation (jours)
+              <input type="number" id="slot-deadline-window" min="1" placeholder="auto">
+            </label>
+          </div>
+          <button type="submit" class="p5-btn">CONFIRM</button>
+        </form>
+
+        <div class="confidant-controls" id="slot-filter-row">
+          <button type="button" class="tab-filter active" data-filter="all">Tout</button>
+          <button type="button" class="tab-filter" data-filter="local">Interne</button>
+          <button type="button" class="tab-filter" data-filter="icloud">iCloud</button>
+          <button type="button" class="tab-filter" data-filter="pronote">Pronote</button>
+        </div>
+        <div id="slot-list"></div>
+      </section>
+
+      <!-- CONFIDANTS -->
+      <section id="screen-confidants" class="screen sub" aria-label="Confidants">
+        <div class="screen-head"><span class="ransom" data-ransom="CONFIDANTS"></span></div>
+        <button class="back-hint" data-back>Esc · Retour</button>
+
+        <form id="confidant-form" class="paper form-block">
+          <div class="form-row">
+            <label>Nom
+              <input type="text" id="confidant-name" placeholder="Ex : Marie" required>
+            </label>
+            <label>Catégorie
+              <select id="confidant-category">
+                <option value="famille">Famille proche</option>
+                <option value="ami-proche">Ami proche</option>
+                <option value="ami-eloigne">Ami éloigné</option>
+                <option value="collegue">Collègue</option>
+              </select>
+            </label>
+          </div>
+          <button type="submit" class="p5-btn">+ Ajouter ce confidant</button>
+          <p class="empty-hint" style="margin-top:2px">Les détails (téléphone, Insta, objectif...) se règlent ensuite dans sa fiche — clique sur la carte.</p>
+        </form>
+
+        <div class="confidant-controls">
+          <label style="color:var(--white);font-size:12px;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:6px">
+            Trier par
+            <select id="confidant-sort">
+              <option value="urgency">Urgence</option>
+              <option value="name">Nom</option>
+            </select>
+          </label>
+        </div>
+        <div id="confidant-list"></div>
+      </section>
+
+      <!-- STATS -->
+      <section id="screen-stats" class="screen sub" aria-label="Stats">
+        <div class="screen-head"><span class="ransom" data-ransom="STATS"></span></div>
+        <button class="back-hint" data-back>Esc · Retour</button>
+        <div class="skill-group" id="skill-group">
+          <h3>Progression</h3>
+          <div class="skill-row" data-stat="savoir">
+            <div class="name">Savoir</div>
+            <div class="skill-bar" aria-hidden><div class="fill" style="width:0%"></div></div>
+            <div class="lv">Lv 0</div>
+          </div>
+          <div class="skill-row" data-stat="audace">
+            <div class="name">Audace</div>
+            <div class="skill-bar" aria-hidden><div class="fill" style="width:0%"></div></div>
+            <div class="lv">Lv 0</div>
+          </div>
+          <div class="skill-row" data-stat="bienveillance">
+            <div class="name">Bienveillance</div>
+            <div class="skill-bar" aria-hidden><div class="fill" style="width:0%"></div></div>
+            <div class="lv">Lv 0</div>
+          </div>
+          <div class="skill-row" data-stat="habilete">
+            <div class="name">Habileté</div>
+            <div class="skill-bar" aria-hidden><div class="fill" style="width:0%"></div></div>
+            <div class="lv">Lv 0</div>
+          </div>
+          <div class="skill-row" data-stat="charme">
+            <div class="name">Charme</div>
+            <div class="skill-bar" aria-hidden><div class="fill" style="width:0%"></div></div>
+            <div class="lv">Lv 0</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section id="screen-settings" class="screen sub" aria-label="Paramètres">
+        <div class="screen-head"><span class="ransom" data-ransom="PARAM"></span></div>
+        <button class="back-hint" data-back>Esc · Retour</button>
+
+        <div class="paper">
+          <p style="font-weight:800;text-transform:uppercase;font-size:13px;letter-spacing:.06em;margin-bottom:6px">Intégrations externes</p>
+          <p style="font-size:13px;color:#444;margin-bottom:12px">
+            Le planning interne peut importer les événements d'iCloud (Apple Calendar) et de Pronote. Ces synchronisations passent par un petit backend
+            (voir cahier des charges §7/§8) : cette page ne fait qu'appeler l'URL du backend ci-dessous — sans backend déployé, active le
+            <strong>mode démo</strong> pour tester l'interface avec des événements simulés.
+          </p>
+
+          <div class="form-row">
+            <label>URL du backend (Cloudflare Workers / Vercel)
+              <input type="text" id="settings-backend-url" placeholder="https://mon-backend.example.workers.dev">
+            </label>
+            <label style="flex-direction:row;align-items:center;gap:8px;justify-content:flex-start">
+              <input type="checkbox" id="settings-demo-mode" style="width:auto">
+              Mode démo (sans backend)
+            </label>
+          </div>
+
+          <div class="fiche-section-title">Apple Calendar (iCloud)</div>
+          <div class="form-row">
+            <label>Identifiant Apple
+              <input type="email" id="settings-icloud-email" placeholder="prenom@icloud.com">
+            </label>
+            <label>Mot de passe spécifique à l'app
+              <input type="password" id="settings-icloud-password" placeholder="xxxx-xxxx-xxxx-xxxx">
+            </label>
+          </div>
+          <button type="button" class="p5-btn" id="syncICloudBtn">Synchroniser iCloud</button>
+
+          <div class="fiche-section-title">Pronote (neveu)</div>
+          <div class="form-row">
+            <label>Identifiant Pronote
+              <input type="text" id="settings-pronote-user" placeholder="identifiant du neveu">
+            </label>
+            <label>Mot de passe
+              <input type="password" id="settings-pronote-password" placeholder="mot de passe">
+            </label>
+          </div>
+          <button type="button" class="p5-btn" id="syncPronoteBtn">Synchroniser Pronote</button>
+
+          <div id="sync-log" style="margin-top:14px;font-size:13px;color:#333;line-height:1.5"></div>
+        </div>
+
+        <div class="paper">
+          <p>Paramètres PWA (installation, notifications à activer plus tard), sauvegarde, thèmes.</p>
+          <hr style="margin:14px 0;border:none;border-top:1px solid rgba(0,0,0,.06)">
+          <div style="font-size:13px;color:#333;line-height:1.4">
+            <strong>Ressources utilisées (liens) :</strong>
+            <ul style="margin:8px 0 0;padding-left:18px;color:#222">
+              <li>Persona5main — fallback utilisé (Barlow/Inter)</li>
+              <li><a href="https://raw.githubusercontent.com/Omicron69/persona5-style-portfolio/main/assets/sfx/select.mp3" target="_blank" rel="noopener">SFX select (Omicron69)</a></li>
+            </ul>
+            <p style="margin-top:8px;color:#444">Si les images ou la police n'apparaissent pas, ouvre la page via GitHub Pages (HTTPS) ou active le mode en ligne.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Bottom nav -->
+    <nav id="hud-bottom" class="bottom-nav" role="navigation" aria-label="Navigation principale">
+      <button class="tab active" data-key="home" aria-current="page" aria-label="Accueil">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10.5z" fill="currentColor"/></svg>
+      </button>
+
+      <button class="tab" data-key="confidants" aria-label="Confidants">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 20a8 8 0 0 1 16 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <button class="tab" data-key="calendar" aria-label="Velvet Room">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M16 3v4M8 3v4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </button>
+
+      <button class="tab" data-key="stats" aria-label="Stats">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19v-9M12 19v-5M19 19V8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+
+      <button class="tab" data-key="settings" aria-label="Paramètres">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" stroke="currentColor" stroke-width="1.4"/></svg>
+      </button>
+    </nav>
+  </div>
+
+  <audio id="sfx-select" src="https://raw.githubusercontent.com/Omicron69/persona5-style-portfolio/main/assets/sfx/select.mp3" preload="auto"></audio>
+
+  <!-- Overlays (suggestions / manual / journal) -->
+  <div class="overlay" id="overlay">
+    <div class="menu-panel" role="dialog" aria-modal="true" aria-labelledby="suggestions-title">
+      <div class="menu-heading" id="suggestions-title">SUGGESTIONS <span>// créneau libre</span></div>
+      <ul class="menu-list" id="suggestions-list"></ul>
+      <button class="menu-close" id="closeMenu">FERMER</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="manualOverlay">
+    <div class="menu-panel" role="dialog" aria-modal="true" aria-labelledby="manual-title">
+      <div class="menu-heading" id="manual-title">FREE TIME</div>
+      <div style="padding:12px 18px;">
+        <label style="display:block;font-family:Inter,monospace;margin-bottom:6px">Durée (minutes)</label>
+        <input id="manual-duration" type="number" value="30" min="5" step="5" style="width:100%;padding:10px;margin-bottom:10px;background:#0b0b0d;border:1px solid rgba(255,255,255,0.05);color:var(--white)">
+
+        <label style="display:block;font-family:Inter,monospace;margin-bottom:6px">Cibler une stat</label>
+        <select id="manual-stat" style="width:100%;padding:10px;margin-bottom:12px;background:#0b0b0d;border:1px solid rgba(255,255,255,0.05);color:var(--white)">
+          <option value="">Peu importe</option>
+          <option value="savoir">Savoir</option>
+          <option value="audace">Audace</option>
+          <option value="bienveillance">Bienveillance</option>
+          <option value="habilete">Habileté</option>
+          <option value="charme">Charme</option>
+        </select>
+
+        <button class="p5-btn" id="confirmManual">CONFIRM</button>
+      </div>
+      <button class="menu-close" id="closeManual">FERMER</button>
+    </div>
+  </div>
+
+  <div class="overlay journal-overlay" id="journalOverlay">
+    <div class="menu-panel" role="dialog" aria-modal="true" style="max-width:720px;">
+      <div class="journal-head">
+        <span>JOURNAL <span class="accent">// AUJOURD'HUI</span></span>
+        <button class="menu-close" id="closeJournal">FERMER</button>
+      </div>
+      <textarea class="journal-area" id="journalArea" placeholder="Aujourd'hui..."></textarea>
+      <div style="padding:12px 18px;">
+        <button class="p5-btn" id="saveJournal">SAVE</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="recapOverlay">
+    <div class="menu-panel" role="dialog" aria-modal="true" aria-labelledby="recap-title" style="max-width:720px;">
+      <div class="menu-heading" id="recap-title">RÉCAP <span>// AUJOURD'HUI</span></div>
+      <div style="max-width:none;margin:14px 18px;">
+        <div id="recap-body"></div>
+      </div>
+      <button class="menu-close" id="closeRecap">FERMER</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="ficheOverlay">
+    <div class="menu-panel" role="dialog" aria-modal="true" aria-labelledby="fiche-title" style="max-width:640px;">
+      <div class="menu-heading" id="fiche-title">FICHE <span id="fiche-name-label">// CONFIDANT</span></div>
+      <div class="paper fiche-body" style="max-width:none;margin:14px 18px;">
+        <input type="hidden" id="fiche-id">
+        <div class="form-row">
+          <label>Nom
+            <input type="text" id="fiche-name">
+          </label>
+          <label>Catégorie
+            <select id="fiche-category">
+              <option value="famille">Famille proche</option>
+              <option value="ami-proche">Ami proche</option>
+              <option value="ami-eloigne">Ami éloigné</option>
+              <option value="collegue">Collègue</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Fréquence cible (jours)
+            <input type="number" id="fiche-frequency" min="1">
+          </label>
+          <label>Importance (1-5)
+            <input type="number" id="fiche-importance" min="1" max="5">
+          </label>
+        </div>
+        <div class="fiche-section-title">Coordonnées</div>
+        <div class="form-row">
+          <label>Téléphone
+            <input type="tel" id="fiche-phone" placeholder="06 12 34 56 78">
+          </label>
+          <label>Email
+            <input type="email" id="fiche-email" placeholder="prenom@mail.com">
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Instagram
+            <input type="text" id="fiche-instagram" placeholder="@pseudo">
+          </label>
+          <label>Autres réseaux
+            <input type="text" id="fiche-social" placeholder="Snap, Discord, WhatsApp...">
+          </label>
+        </div>
+        <div class="fiche-section-title">Notes</div>
+        <label style="display:block;margin-bottom:12px">
+          <textarea id="fiche-note" rows="3" placeholder="Contexte, sujets de conversation..." style="width:100%;font:inherit;font-size:14px;padding:8px 10px;border:2px solid var(--ink);background:#fff;color:var(--ink)"></textarea>
+        </label>
+        <div class="fiche-section-title">Objectif du mois</div>
+        <div class="form-row">
+          <label style="flex:2">Objectif
+            <input type="text" id="fiche-goal" placeholder="Ex : revoir avant la fin du mois">
+          </label>
+          <label style="flex-direction:row;align-items:center;gap:8px;justify-content:flex-start">
+            <input type="checkbox" id="fiche-goal-done" style="width:auto">
+            Atteint
+          </label>
+        </div>
+        <div id="fiche-meta" class="empty-hint" style="margin-bottom:10px"></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button type="button" class="p5-btn" id="ficheSave">Enregistrer</button>
+          <button type="button" class="p5-btn" id="ficheContact" style="background:var(--black)">Marquer contacté</button>
+          <button type="button" class="btn-del" id="ficheDelete" style="clip-path:polygon(0 0,100% 0,88% 100%,0 100%);padding:10px 22px;font-weight:800;text-transform:uppercase;border:none;cursor:pointer">Supprimer</button>
+        </div>
+      </div>
+      <button class="menu-close" id="closeFiche">FERMER</button>
+    </div>
+  </div>
+
+  <script>
+/* Navigation & render ransom (kept) */
+(function(){
+  const ROUTES = {"":"home","#/":"home","#/home":"home","#/calendar":"calendar","#/confidants":"confidants","#/stats":"stats","#/settings":"settings"};
+  const WIPE_TOTAL = 450;
+  const WIPE_SWAP_MS = Math.round(WIPE_TOTAL * 0.45);
+
+  const screens = {
+    home: document.getElementById('screen-home'),
+    calendar: document.getElementById('screen-calendar'),
+    confidants: document.getElementById('screen-confidants'),
+    stats: document.getElementById('screen-stats'),
+    settings: document.getElementById('screen-settings')
+  };
+  const tabs = Array.from(document.querySelectorAll('.bottom-nav .tab'));
+  const menuItems = Array.from(document.querySelectorAll('.menu-item'));
+  const backButtons = Array.from(document.querySelectorAll('[data-back]'));
+  const wipe = document.getElementById('wipe');
+  const sfx = document.getElementById('sfx-select');
+
+  let animating = false;
+  let currentScreen = 'home';
+  let menuIndex = 0;
+
+  function playSfx(){ if (!sfx || typeof sfx.play !== 'function') return; try{ sfx.currentTime = 0; sfx.play().catch(()=>{}); }catch(e){} }
+
+  function renderRansom(){
+    const nodes = document.querySelectorAll('[data-ransom]');
+    nodes.forEach(node=>{
+      const text = (node.getAttribute('data-ransom')||'').toUpperCase();
+      node.innerHTML = '';
+      for (let i=0;i<text.length;i++){
+        const ch = text[i];
+        const span = document.createElement('span');
+        span.className = 'ch';
+        if (ch === ' ') span.innerHTML = '&nbsp;'; else span.textContent = ch;
+        node.appendChild(span);
+      }
+    });
+  }
+
+  function setActiveScreen(key){
+    currentScreen = key;
+    Object.keys(screens).forEach(k=>{
+      const el = screens[k];
+      if (!el) return;
+      el.classList.toggle('active', k===key);
+    });
+    document.body.setAttribute('data-screen', key === 'home' ? 'home' : key);
+    tabs.forEach(btn=>{
+      const k = btn.getAttribute('data-key');
+      const is = k === key;
+      btn.classList.toggle('active', is);
+      if (is) btn.setAttribute('aria-current','page'); else btn.removeAttribute('aria-current');
+    });
+    expandNav();
+  }
+
+  /* La nav se RÉDUIT (jamais ne disparaît) quand on scrolle vraiment vers le bas,
+     ou le temps d'une action qui a besoin de place (ex : clavier ouvert sur un champ).
+     Ne réagit pas au moindre pixel : seuil de mouvement cumulé + petit délai avant de reprendre sa taille. */
+  const navEl = document.getElementById('hud-bottom');
+  let navBusyCount = 0;
+  function reduceNav(){ if (navEl) navEl.classList.add('compact'); }
+  function expandNav(){ if (navEl && navBusyCount <= 0) navEl.classList.remove('compact'); }
+
+  const SCROLL_THRESHOLD = 24;
+  const lastDecisionTop = {};
+  Object.values(screens).forEach(screenEl=>{
+    if (!screenEl) return;
+    lastDecisionTop[screenEl.id] = 0;
+    screenEl.addEventListener('scroll', ()=>{
+      const st = screenEl.scrollTop;
+      const ref = lastDecisionTop[screenEl.id] || 0;
+      if (st < 20){
+        lastDecisionTop[screenEl.id] = st;
+        expandNav();
+        return;
+      }
+      if (st - ref > SCROLL_THRESHOLD){
+        lastDecisionTop[screenEl.id] = st;
+        reduceNav();
+      } else if (ref - st > SCROLL_THRESHOLD){
+        lastDecisionTop[screenEl.id] = st;
+        expandNav();
+      }
+    }, { passive:true });
+  });
+
+  /* Ouverture du clavier sur un champ : on réduit le temps de la saisie, puis on reprend la taille normale */
+  document.addEventListener('focusin', (e)=>{
+    if (e.target.matches('input, textarea, select')){
+      navBusyCount++;
+      reduceNav();
+    }
+  });
+  document.addEventListener('focusout', (e)=>{
+    if (e.target.matches('input, textarea, select')){
+      navBusyCount = Math.max(0, navBusyCount - 1);
+      setTimeout(()=>{ if (navBusyCount <= 0) expandNav(); }, 150);
+    }
+  });
+
+  function navigateTo(target){
+    if (!target || animating) return;
+    if (target === currentScreen) return;
+
+    animating = true;
+    playSfx();
+    if (wipe) wipe.classList.add('go');
+
+    setTimeout(()=>{
+      setActiveScreen(target);
+      window.location.hash = '#/' + target;
+    }, WIPE_SWAP_MS);
+
+    const onEnd = ()=>{
+      if (wipe) wipe.classList.remove('go');
+      animating = false;
+      if (wipe) wipe.removeEventListener('animationend', onEnd);
+    };
+    if (wipe) wipe.addEventListener('animationend', onEnd);
+    else setTimeout(onEnd, WIPE_TOTAL+50);
+  }
+
+  function selectMenuItem(index){
+    if (!menuItems.length) return;
+    const next = ((index % menuItems.length) + menuItems.length) % menuItems.length;
+    if (next === menuIndex) return;
+    menuIndex = next;
+    menuItems.forEach((mi,i)=> mi.classList.toggle('sel', i===menuIndex));
+    playSfx();
+  }
+
+  tabs.forEach(btn=> btn.addEventListener('click', ()=> navigateTo(btn.getAttribute('data-key'))));
+  menuItems.forEach((mi,i)=>{
+    mi.addEventListener('mouseenter', ()=> selectMenuItem(i));
+    mi.addEventListener('click', ()=> navigateTo(mi.getAttribute('data-target')));
+  });
+  backButtons.forEach(b=> b.addEventListener('click', ()=> navigateTo('home')));
+  window.addEventListener('hashchange', ()=> {
+    const target = ROUTES[window.location.hash] || 'home';
+    navigateTo(target);
+  });
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    renderRansom();
+    const initial = ROUTES[window.location.hash] || 'home';
+    setActiveScreen(initial);
+    setTimeout(()=> document.body.classList.add('loaded'), 80);
+  });
+
+  window.addEventListener('keydown', (e)=>{
+    if (e.key === 'Escape'){ navigateTo('home'); return; }
+    if (currentScreen === 'home' && (e.key === 'ArrowUp' || e.key === 'ArrowDown')){
+      selectMenuItem(menuIndex + (e.key === 'ArrowDown' ? 1 : -1));
+      e.preventDefault();
+      return;
+    }
+    if (currentScreen === 'home' && e.key === 'Enter'){
+      const target = menuItems[menuIndex] && menuItems[menuIndex].getAttribute('data-target');
+      if (target) navigateTo(target);
+      return;
+    }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight'){
+      const order = ['home','calendar','confidants','stats','settings'];
+      const cur = document.body.getAttribute('data-screen') || 'home';
+      let i = order.indexOf(cur);
+      if (i === -1) i = 0;
+      i = e.key === 'ArrowLeft' ? Math.max(0,i-1) : Math.min(order.length-1,i+1);
+      navigateTo(order[i]);
+    }
+  });
+})();
+  </script>
+
+  <script>
+/* Data layer, stats logic, storage (kept from merged) */
+(function(){
+  const STORE_KEY = 'p5tm-data-v1';
+
+  const STATS = [
+    { key: 'savoir', label: 'Savoir' },
+    { key: 'audace', label: 'Audace' },
+    { key: 'bienveillance', label: 'Bienveillance' },
+    { key: 'habilete', label: 'Habileté' },
+    { key: 'charme', label: 'Charme' }
+  ];
+  const DEADLINE_WINDOWS = { petit: 3, moyen: 6, majeur: 12 };
+  const CATEGORY_FREQUENCY = { 'famille': 3, 'ami-proche': 7, 'ami-eloigne': 21, 'collegue': 30 };
+  const LEVEL_STEP = 20;
+  const MAX_LEVEL = 5;
+  const GAIN = {
+    slotDone: 2,
+    contact: 3,
+    suggestionDefault: 1,
+    suggestionMajor: 2
+  };
+  const API_NAME = 'P5TM';
+
+  function loadData(){
+    try{
+      const raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return getDefaultData();
+      const parsed = JSON.parse(raw);
+      parsed.slots = parsed.slots || [];
+      parsed.confidants = parsed.confidants || [];
+      parsed.stats = parsed.stats || STATS.reduce((a,s)=>{a[s.key]=0;return a;},{});
+      parsed.suggestionsHistory = parsed.suggestionsHistory || [];
+      parsed.journal = parsed.journal || [];
+      parsed.statLog = parsed.statLog || [];
+      parsed.settings = parsed.settings || getDefaultSettings();
+      parsed.syncLog = parsed.syncLog || [];
+      return parsed;
+    }catch(e){
+      return getDefaultData();
+    }
+  }
+  function getDefaultSettings(){ return { backendUrl:'', demoMode:false, icloudEmail:'', icloudPassword:'', pronoteUser:'', pronotePassword:'' }; }
+  function getDefaultData(){ const statsObj = STATS.reduce((a,s)=>{a[s.key]=0;return a;},{}); return { slots:[], confidants:[], stats: statsObj, suggestionsHistory:[], journal:[], statLog:[], settings:getDefaultSettings(), syncLog:[] }; }
+  function isToday(dateStr){ if (!dateStr) return false; const d = new Date(dateStr); const n = new Date(); return d.getFullYear()===n.getFullYear() && d.getMonth()===n.getMonth() && d.getDate()===n.getDate(); }
+  function saveData(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(data)); }catch(e){} }
+
+  let data = loadData();
+
+  const sfx = document.getElementById('sfx-select');
+  function playSfx(){ if (!sfx || typeof sfx.play !== 'function') return; try{ sfx.currentTime = 0; sfx.play().catch(()=>{}); }catch(e){} }
+
+  const popup = document.getElementById('gain-popup');
+  let popupTimer = null;
+  function showGain(cat, amount){
+    if (!popup) return;
+    const label = (STATS.find(s=>s.key===cat) || {label:cat}).label || String(cat).toUpperCase();
+    popup.textContent = label.toUpperCase() + ' +' + amount;
+    popup.classList.add('show');
+    playSfx();
+    clearTimeout(popupTimer);
+    popupTimer = setTimeout(()=> popup.classList.remove('show'), 1400);
+  }
+
+  function addStat(cat, baseAmount){
+    if (!cat || !data.stats.hasOwnProperty(cat)) return;
+    const amount = applyDiminishingReturns(cat, Number(baseAmount || 0));
+    data.stats[cat] = (data.stats[cat] || 0) + amount;
+    data.statLog = data.statLog || [];
+    data.statLog.push({ cat, amount, ts: new Date().toISOString() });
+    if (data.statLog.length > 500) data.statLog.shift();
+    saveData();
+    renderStats();
+    showGain(cat, amount);
+  }
+
+  /* Anti-abus : plus une même stat a déjà été créditée aujourd'hui, plus le gain suivant
+     est réduit (jamais à zéro). Évite de faire grimper une stat en spammant de petites
+     validations répétées le même jour. */
+  function applyDiminishingReturns(cat, baseAmount){
+    if (baseAmount <= 0) return baseAmount;
+    const todayCount = (data.statLog || []).filter(l => l.cat === cat && isToday(l.ts)).length;
+    let factor = 1;
+    if (todayCount >= 6) factor = 0.4;
+    else if (todayCount >= 3) factor = 0.7;
+    return Math.max(1, Math.round(baseAmount * factor));
+  }
+
+  /* Gain d'un créneau = poids intrinsèque de la tâche (choisi à la création, indépendant
+     du temps) + un bonus de durée réservé aux catégories où le temps investi a du sens.
+     Ex : réviser (Savoir) = poids + temps passé. Appeler quelqu'un ou prendre une
+     initiative (Charme, Audace...) = poids seul, la durée ne compte pas. */
+  function minutesBetween(start, end){
+    const [sh,sm] = String(start||'0:0').split(':').map(Number);
+    const [eh,em] = String(end||'0:0').split(':').map(Number);
+    let diff = (eh*60+em) - (sh*60+sm);
+    if (diff < 0) diff += 24*60;
+    return diff;
+  }
+  const TASK_WEIGHT = { leger: 1, normal: 2, important: 4 };
+  // Catégories où le temps passé fait vraiment partie du mérite (accomplissement + investissement).
+  // Les autres (Audace, Bienveillance, Charme...) sont jugées sur le fait accompli, pas la durée.
+  const DURATION_COUNTS_FOR = ['savoir', 'habilete'];
+  function computeSlotGain(slot){
+    const weight = TASK_WEIGHT[slot.weight] || TASK_WEIGHT.normal;
+    if (!DURATION_COUNTS_FOR.includes(slot.cat)) return weight;
+    const mins = minutesBetween(slot.start, slot.end);
+    const durationBonus = Math.max(0, Math.min(4, Math.round(mins / 20))); // petit bonus, plafonné
+    return Math.max(1, weight + durationBonus);
+  }
+
+  /* Gain de contact pondéré par l'importance manuelle du confident (1 à 5, 3 = référence) —
+     jamais lié à une durée : un appel se mesure au fait qu'il ait eu lieu, pas à sa longueur. */
+  function computeContactGain(c){
+    const importance = Number(c && c.importance) || 3;
+    return Math.max(1, Math.round(GAIN.contact * (importance / 3)));
+  }
+
+  /* Seuils cumulés par niveau (0 à 5, comme les rangs Confidants du jeu). Écarts croissants :
+     rapide au début (pour motiver), nettement plus long vers la fin — "lent mais pas trop". */
+  const LEVEL_THRESHOLDS = [0, 15, 35, 65, 105, 160];
+  function levelForPoints(points){
+    let level = 0;
+    for (let i=1;i<LEVEL_THRESHOLDS.length;i++){ if (points >= LEVEL_THRESHOLDS[i]) level = i; }
+    return Math.min(MAX_LEVEL, level);
+  }
+  function renderStats(){
+    document.querySelectorAll('#skill-group .skill-row').forEach(row=>{
+      const cat = row.getAttribute('data-stat');
+      const points = data.stats[cat] || 0;
+      const level = levelForPoints(points);
+      const floor = LEVEL_THRESHOLDS[level] || 0;
+      const ceilVal = level >= MAX_LEVEL ? floor : LEVEL_THRESHOLDS[level+1];
+      const within = level >= MAX_LEVEL ? 100 : ((points - floor) / (ceilVal - floor)) * 100;
+      const fill = row.querySelector('.fill');
+      const lv = row.querySelector('.lv');
+      if (fill) fill.style.width = within + '%';
+      if (lv) lv.textContent = 'Lv ' + level;
+    });
+  }
+
+  /* Slots */
+  const slotForm = document.getElementById('slot-form');
+  const toggleSlotFormBtn = document.getElementById('toggleSlotForm');
+  if (toggleSlotFormBtn && slotForm){
+    toggleSlotFormBtn.addEventListener('click', ()=>{
+      const isHidden = slotForm.classList.toggle('slot-form-hidden');
+      toggleSlotFormBtn.textContent = isHidden ? '+ Ajouter un créneau' : 'FERMER';
+      if (!isHidden) document.getElementById('slot-title').focus();
+    });
+  }
+  const slotList = document.getElementById('slot-list');
+
+  function daysUntil(dateStr){ if (!dateStr) return null; const target = new Date(dateStr + 'T23:59:59'); const diff = target.getTime() - Date.now(); return Math.ceil(diff / 86400000); }
+
+  function deadlineInfo(slot){
+    if (!slot.isDeadline || !slot.deadlineDate) return null;
+    const remaining = daysUntil(slot.deadlineDate);
+    const windowDays = Number(slot.anticipationDays) || DEADLINE_WINDOWS[slot.importance] || DEADLINE_WINDOWS.moyen;
+    const active = remaining !== null && remaining <= windowDays;
+    const label = remaining === null ? '' : (remaining < 0 ? 'Dépassée' : (remaining === 0 ? "Aujourd'hui" : 'J-' + remaining));
+    return { remaining, windowDays, active, label };
+  }
+  let slotFilter = 'all';
+  function renderSlots(){
+    if (!slotList) return;
+    slotList.innerHTML = '';
+    const visibleSlots = slotFilter === 'all' ? data.slots : data.slots.filter(s=> (s.source||'local') === slotFilter);
+    if (!visibleSlots.length){
+      slotList.innerHTML = '<p class="empty-hint">Aucun créneau ' + (slotFilter==='all' ? "pour l'instant — ajoute le premier ci-dessus." : 'dans ce filtre.') + '</p>';
+      return;
+    }
+    const byDay = {};
+    visibleSlots.forEach(s=>{ (byDay[s.day] = byDay[s.day] || []).push(s); });
+    Object.keys(byDay).sort((a,b)=>a-b).forEach(dayIdx=>{
+      const heading = document.createElement('div');
+      heading.className = 'day-heading';
+      heading.textContent = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'][dayIdx] || 'Jour ' + dayIdx;
+      slotList.appendChild(heading);
+
+      byDay[dayIdx].sort((a,b)=> a.start.localeCompare(b.start)).forEach(slot=>{
+        const dl = deadlineInfo(slot);
+        const source = slot.source || 'local';
+        const card = document.createElement('div');
+        card.className = 'item-card' + (slot.done ? ' done' : '') +
+          (dl ? ' dl-' + slot.importance + (dl.active ? ' dl-active' : '') : '') +
+          (source !== 'local' ? ' readonly-source' : '');
+        const dlBadge = dl ? '<span class="deadline-badge">Échéance · <span class="dl-countdown">' + dl.label + '</span></span>' : '';
+        const srcBadge = source === 'icloud' ? '<span class="source-badge src-icloud">iCloud</span>'
+          : source === 'pronote' ? '<span class="source-badge src-pronote">Pronote</span>' : '';
+        const weightLabel = { leger:'Léger', normal:'Normal', important:'Important' }[slot.weight] || '';
+        card.innerHTML =
+          '<div class="main">' +
+            '<div class="title">' + escapeHtml(slot.title) + dlBadge + srcBadge + '</div>' +
+            '<div class="meta">' + slot.start + ' – ' + slot.end +
+              (slot.cat ? ' · <span class="cat-tag">' + escapeHtml(slot.cat) + '</span>' : '') +
+              (weightLabel ? ' · <span class="weight-tag weight-' + slot.weight + '">' + weightLabel + '</span>' : '') +
+            '</div>' +
+          '</div>' +
+          '<div class="actions">' +
+            (slot.done ? '' : '<button class="btn-done" data-action="done" data-id="' + slot.id + '">Fait</button>') +
+            '<button class="btn-del" data-action="del" data-id="' + slot.id + '">Suppr.</button>' +
+            '<button class="btn-suggest" data-action="suggest" data-id="' + slot.id + '">Suggestions</button>' +
+          '</div>';
+        slotList.appendChild(card);
+      });
+    });
+  }
+
+  const slotFilterRow = document.getElementById('slot-filter-row');
+  if (slotFilterRow){
+    slotFilterRow.addEventListener('click', (e)=>{
+      const btn = e.target.closest('.tab-filter');
+      if (!btn) return;
+      slotFilter = btn.getAttribute('data-filter');
+      Array.from(slotFilterRow.querySelectorAll('.tab-filter')).forEach(b=> b.classList.toggle('active', b===btn));
+      renderSlots();
+    });
+  }
+
+  if (slotForm){
+    slotForm.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const title = document.getElementById('slot-title').value.trim();
+      const cat = document.getElementById('slot-cat').value;
+      const weight = document.getElementById('slot-weight').value;
+      const day = document.getElementById('slot-day').value;
+      const start = document.getElementById('slot-start').value;
+      const end = document.getElementById('slot-end').value;
+      const isDeadline = document.getElementById('slot-is-deadline').checked;
+      const importance = document.getElementById('slot-deadline-importance').value;
+      const deadlineDate = document.getElementById('slot-deadline-date').value;
+      const windowInput = document.getElementById('slot-deadline-window').value;
+      if (!title || !start || !end) return;
+      data.slots.push({
+        id: 's' + Date.now(), title, cat, weight, day, start, end, done:false, tag: '',
+        isDeadline, importance: isDeadline ? importance : '', deadlineDate: isDeadline ? deadlineDate : '',
+        anticipationDays: (isDeadline && windowInput) ? Number(windowInput) : null,
+        doneAt: null, source: 'local'
+      });
+      saveData();
+      renderSlots();
+      slotForm.reset();
+      document.getElementById('slot-start').value = start;
+      document.getElementById('slot-end').value = end;
+      slotForm.classList.add('slot-form-hidden');
+      if (toggleSlotFormBtn) toggleSlotFormBtn.textContent = '+ Ajouter un créneau';
+      playSfx();
+    });
+  }
+
+  if (slotList){
+    slotList.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button[data-action]');
+      if (!btn) return;
+      const id = btn.getAttribute('data-id');
+      const action = btn.getAttribute('data-action');
+      const slot = data.slots.find(s=> s.id === id);
+      if (!slot) return;
+      if (action === 'done'){
+        slot.done = true;
+        slot.doneAt = new Date().toISOString();
+        saveData();
+        renderSlots();
+        if (slot.cat) addStat(slot.cat, computeSlotGain(slot));
+      } else if (action === 'del'){
+        data.slots = data.slots.filter(s=> s.id !== id);
+        saveData();
+        renderSlots();
+      } else if (action === 'suggest'){
+        openSuggestionsForSlot(slot);
+      }
+    });
+  }
+
+  /* Confidants */
+  const confidantForm = document.getElementById('confidant-form');
+  const confidantList = document.getElementById('confidant-list');
+  const confidantCategory = document.getElementById('confidant-category');
+  const confidantSort = document.getElementById('confidant-sort');
+
+  function daysSince(dateStr){ if (!dateStr) return null; const diff = Date.now() - new Date(dateStr).getTime(); return Math.floor(diff / 86400000); }
+
+  /* Score d'urgence = retard par rapport à la fréquence cible, pondéré par l'importance manuelle */
+  function urgencyScore(c){
+    const since = daysSince(c.lastContact);
+    const frequency = Number(c.frequency) || 7;
+    const importance = Number(c.importance) || 1;
+    const base = since === null ? frequency : since;
+    const overdue = base - frequency;
+    return overdue * importance;
+  }
+  function urgencyClass(score){
+    if (score >= 5) return 'urg-late';
+    if (score >= 0) return 'urg-soon';
+    return 'urg-ok';
+  }
+  function urgencyLabel(score){
+    if (score >= 5) return 'En retard';
+    if (score >= 0) return 'Bientôt';
+    return 'À jour';
+  }
+
+  function renderConfidants(){
+    if (!confidantList) return;
+    confidantList.innerHTML = '';
+    if (!data.confidants.length){
+      confidantList.innerHTML = '<p class="empty-hint">Aucun confidant enregistré — ajoute le premier ci-dessus.</p>';
+      return;
+    }
+    const sortMode = confidantSort ? confidantSort.value : 'urgency';
+    const list = data.confidants.slice().sort((a,b)=>{
+      if (sortMode === 'name') return a.name.localeCompare(b.name);
+      return urgencyScore(b) - urgencyScore(a);
+    });
+    list.forEach(c=>{
+      const since = daysSince(c.lastContact);
+      const meta = since === null ? 'Jamais contacté' : (since === 0 ? 'Contacté aujourd’hui' : 'Dernier contact il y a ' + since + ' jour' + (since>1?'s':''));
+      const score = urgencyScore(c);
+      const uClass = urgencyClass(score);
+      const card = document.createElement('div');
+      card.className = 'item-card clickable ' + uClass;
+      card.dataset.id = c.id;
+      card.innerHTML =
+        '<div class="main">' +
+          '<div class="title">' + escapeHtml(c.name) + '<span class="urgency-badge">' + urgencyLabel(score) + '</span></div>' +
+          '<div class="meta">' + meta + ' · cible ' + (Number(c.frequency)||7) + 'j' +
+            (c.goal ? ' · ' + (c.goalDone ? '✓ ' : '') + escapeHtml(c.goal) : '') + '</div>' +
+        '</div>' +
+        '<div class="actions">' +
+          '<button class="btn-done" data-action="contact" data-id="' + c.id + '">Contacté</button>' +
+        '</div>';
+      confidantList.appendChild(card);
+    });
+  }
+
+  if (confidantForm){
+    confidantForm.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const name = document.getElementById('confidant-name').value.trim();
+      const category = document.getElementById('confidant-category').value;
+      const frequency = CATEGORY_FREQUENCY[category] || 7;
+      if (!name) return;
+      data.confidants.push({
+        id:'c'+Date.now(), name, category, lastContact:null, frequency, importance:3,
+        note:'', phone:'', email:'', instagram:'', social:'', goal:'', goalDone:false
+      });
+      saveData();
+      renderConfidants();
+      confidantForm.reset();
+      playSfx();
+    });
+  }
+
+  if (confidantSort) confidantSort.addEventListener('change', renderConfidants);
+
+  if (confidantList){
+    confidantList.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button[data-action]');
+      if (btn){
+        const id = btn.getAttribute('data-id');
+        const action = btn.getAttribute('data-action');
+        const c = data.confidants.find(c=> c.id === id);
+        if (!c) return;
+        if (action === 'contact'){
+          c.lastContact = new Date().toISOString();
+          saveData();
+          renderConfidants();
+          addStat('charme', computeContactGain(c));
+        }
+        return;
+      }
+      const card = e.target.closest('.item-card[data-id]');
+      if (card) openFiche(card.dataset.id);
+    });
+  }
+
+  /* Fiche contact détaillée */
+  const ficheOverlay = document.getElementById('ficheOverlay');
+  const closeFicheBtn = document.getElementById('closeFiche');
+  const ficheSaveBtn = document.getElementById('ficheSave');
+  const ficheContactBtn = document.getElementById('ficheContact');
+  const ficheDeleteBtn = document.getElementById('ficheDelete');
+  const ficheNameLabel = document.getElementById('fiche-name-label');
+
+  function openFiche(id){
+    const c = data.confidants.find(c=> c.id === id);
+    if (!c) return;
+    document.getElementById('fiche-id').value = c.id;
+    document.getElementById('fiche-name').value = c.name || '';
+    document.getElementById('fiche-category').value = c.category || 'ami-proche';
+    document.getElementById('fiche-frequency').value = c.frequency || 7;
+    document.getElementById('fiche-importance').value = c.importance || 3;
+    document.getElementById('fiche-phone').value = c.phone || '';
+    document.getElementById('fiche-email').value = c.email || '';
+    document.getElementById('fiche-instagram').value = c.instagram || '';
+    document.getElementById('fiche-social').value = c.social || '';
+    document.getElementById('fiche-note').value = c.note || '';
+    document.getElementById('fiche-goal').value = c.goal || '';
+    document.getElementById('fiche-goal-done').checked = !!c.goalDone;
+    const since = daysSince(c.lastContact);
+    document.getElementById('fiche-meta').textContent = since === null
+      ? 'Jamais contacté pour l’instant.'
+      : (since === 0 ? 'Contacté aujourd’hui.' : 'Dernier contact il y a ' + since + ' jour' + (since>1?'s':'') + '.');
+    ficheNameLabel.textContent = '// ' + (c.name || '').toUpperCase();
+    ficheOverlay.classList.add('open');
+  }
+
+  function saveFiche(){
+    const id = document.getElementById('fiche-id').value;
+    const c = data.confidants.find(c=> c.id === id);
+    if (!c) return;
+    const wasGoalDone = c.goalDone;
+    c.name = document.getElementById('fiche-name').value.trim() || c.name;
+    c.category = document.getElementById('fiche-category').value;
+    c.frequency = Number(document.getElementById('fiche-frequency').value) || 7;
+    c.importance = Number(document.getElementById('fiche-importance').value) || 3;
+    c.phone = document.getElementById('fiche-phone').value.trim();
+    c.email = document.getElementById('fiche-email').value.trim();
+    c.instagram = document.getElementById('fiche-instagram').value.trim();
+    c.social = document.getElementById('fiche-social').value.trim();
+    c.note = document.getElementById('fiche-note').value.trim();
+    c.goal = document.getElementById('fiche-goal').value.trim();
+    c.goalDone = document.getElementById('fiche-goal-done').checked;
+    saveData();
+    renderConfidants();
+    ficheOverlay.classList.remove('open');
+    if (c.goalDone && !wasGoalDone) addStat('bienveillance', 1);
+  }
+
+  if (ficheSaveBtn) ficheSaveBtn.addEventListener('click', saveFiche);
+  if (ficheContactBtn){
+    ficheContactBtn.addEventListener('click', ()=>{
+      const id = document.getElementById('fiche-id').value;
+      const c = data.confidants.find(c=> c.id === id);
+      if (!c) return;
+      c.lastContact = new Date().toISOString();
+      saveData();
+      saveFiche();
+      addStat('charme', computeContactGain(c));
+    });
+  }
+  if (ficheDeleteBtn){
+    ficheDeleteBtn.addEventListener('click', ()=>{
+      const id = document.getElementById('fiche-id').value;
+      if (!confirm('Supprimer ce confidant ?')) return;
+      data.confidants = data.confidants.filter(c=> c.id !== id);
+      saveData();
+      renderConfidants();
+      ficheOverlay.classList.remove('open');
+    });
+  }
+  if (closeFicheBtn) closeFicheBtn.addEventListener('click', ()=> ficheOverlay.classList.remove('open'));
+  if (ficheOverlay) ficheOverlay.addEventListener('click', (e)=> { if (e.target === ficheOverlay) ficheOverlay.classList.remove('open'); });
+
+  /* Journal */
+  const journalOverlay = document.getElementById('journalOverlay');
+  const openJournalBtn = document.getElementById('openJournal');
+  const journalArea = document.getElementById('journalArea');
+  const saveJournalBtn = document.getElementById('saveJournal');
+  const closeJournalBtn = document.getElementById('closeJournal');
+
+  if (openJournalBtn) openJournalBtn.addEventListener('click', ()=> journalOverlay.classList.add('open'));
+  if (closeJournalBtn) closeJournalBtn.addEventListener('click', ()=> journalOverlay.classList.remove('open'));
+  if (journalOverlay) journalOverlay.addEventListener('click', (e)=> { if (e.target === journalOverlay) journalOverlay.classList.remove('open'); });
+
+  if (saveJournalBtn){
+    saveJournalBtn.addEventListener('click', ()=>{
+      const text = (journalArea.value || '').trim();
+      if (!text) { journalOverlay.classList.remove('open'); return; }
+      data.journal.push({ id:'j'+Date.now(), text, createdAt: new Date().toISOString() });
+      saveData();
+      addStat(STATS[0].key, 1); // bug corrigé : le gain était affiché (showGain) mais jamais persisté
+      journalOverlay.classList.remove('open');
+    });
+  }
+
+  /* Suggestions system */
+  data.suggestionsHistory = data.suggestionsHistory || [];
+
+  const suggestionsOverlay = document.getElementById('overlay');
+  const suggestionsListEl = document.getElementById('suggestions-list');
+  const closeMenuBtn = document.getElementById('closeMenu');
+  if (closeMenuBtn) closeMenuBtn.addEventListener('click', ()=> suggestionsOverlay.classList.remove('open'));
+  if (suggestionsOverlay) suggestionsOverlay.addEventListener('click', (e)=> { if (e.target === suggestionsOverlay) suggestionsOverlay.classList.remove('open'); });
+
+  function openSuggestionsForSlot(slot){
+    if (!slot) return;
+    const suggestions = generateSuggestionsForSlot(slot);
+    renderSuggestionsList(slot, suggestions);
+    suggestionsOverlay.classList.add('open');
+    playSfx();
+  }
+
+  function generateSuggestionsForSlot(slot){
+    const suggestions = [];
+    if (slot.cat === 'savoir'){
+      suggestions.push({ id: 's1', title: 'Réviser — ' + slot.title, stat: 'savoir', amt: GAIN.suggestionMajor, sub: 'Focus sur le sujet principal' });
+      suggestions.push({ id: 's2', title: 'Lire un chapitre lié', stat: 'savoir', amt: GAIN.suggestionDefault, sub: 'Lecture concentrée' });
+    } else if (slot.cat === 'audace'){
+      suggestions.push({ id: 'a1', title: 'Sortir de sa zone de confort', stat: 'audace', amt: GAIN.suggestionMajor, sub: 'Petit défi du jour' });
+      suggestions.push({ id: 'a2', title: 'Prendre une initiative', stat: 'audace', amt: GAIN.suggestionDefault, sub: 'Action concrète' });
+    } else if (slot.cat === 'bienveillance'){
+      suggestions.push({ id: 'b1', title: 'Prendre des nouvelles de quelqu’un', stat: 'bienveillance', amt: GAIN.suggestionMajor, sub: 'Petit geste attentionné' });
+      suggestions.push({ id: 'b2', title: 'Aider ou rendre service', stat: 'bienveillance', amt: GAIN.suggestionDefault, sub: 'Action utile pour autrui' });
+    } else if (slot.cat === 'habilete'){
+      suggestions.push({ id: 'h1', title: 'Faire une tâche rapide', stat: 'habilete', amt: GAIN.suggestionMajor, sub: 'Petit progrès efficace' });
+      suggestions.push({ id: 'h2', title: 'Regarder une vidéo tutorielle', stat: 'habilete', amt: GAIN.suggestionDefault, sub: 'Apprentissage actif' });
+    } else if (slot.cat === 'charme'){
+      suggestions.push({ id: 'c1', title: 'Contacter un ami', stat: 'charme', amt: GAIN.suggestionMajor, sub: 'Message rapide' });
+      suggestions.push({ id: 'c2', title: 'Envoyer un message attentionné', stat: 'charme', amt: GAIN.suggestionDefault, sub: 'Petit geste social' });
+    } else {
+      const lowest = findLowestStat();
+      suggestions.push({ id: 'f1', title: 'Travailler sur ' + (lowest.label || 'Savoir'), stat: lowest.key, amt: GAIN.suggestionDefault, sub: 'Améliorer ' + (lowest.label || '') });
+      suggestions.push({ id: 'f2', title: 'Lire / Doc', stat: 'savoir', amt: GAIN.suggestionDefault, sub: 'Lecture utile' });
+      suggestions.push({ id: 'f3', title: 'Contacter une personne', stat: 'charme', amt: GAIN.suggestionDefault, sub: 'Rapprochement rapide' });
+    }
+    if (slot.tag && slot.tag.toLowerCase().includes('exam')){
+      suggestions.unshift({ id: 'exam', title: 'Préparation examen', stat: 'savoir', amt: Math.max(GAIN.suggestionMajor, GAIN.slotDone), sub: 'Hautement prioritaire' });
+    }
+    return suggestions.slice(0,3);
+  }
+
+  function findLowestStat(){
+    let min = null;
+    STATS.forEach(s=>{
+      const pts = data.stats[s.key] || 0;
+      if (min === null || pts < min.pts) min = { key: s.key, label: s.label, pts };
+    });
+    return min || STATS[0];
+  }
+
+  function renderSuggestionsList(slot, suggestions){
+    if (!suggestionsListEl) return;
+    suggestionsListEl.innerHTML = '';
+    suggestions.forEach((s, i)=>{
+      const li = document.createElement('li');
+      li.className = 'menu-item';
+      li.dataset.suggestionId = s.id;
+      li.dataset.slotId = slot.id;
+      li.innerHTML = '<div class="wipe"></div>' +
+                     '<span class="icon">' + String(i+1).padStart(2,'0') + '</span>' +
+                     '<div class="txt"><div class="title">' + escapeHtml(s.title) + '</div><div class="sub">' + escapeHtml(s.sub || '') + '</div></div>';
+      li.addEventListener('click', ()=> {
+        addStat(s.stat, s.amt);
+        recordSuggestion({ slotId: slot.id, suggestionId: s.id, accepted: true, timestamp: Date.now(), title: s.title, stat: s.stat, amt: s.amt });
+        suggestionsOverlay.classList.remove('open');
+      });
+      suggestionsListEl.appendChild(li);
+    });
+    const ignore = document.createElement('li');
+    ignore.className = 'menu-item';
+    ignore.style.opacity = '.8';
+    ignore.innerHTML = '<div class="wipe"></div><div class="txt"><div class="title">Ignorer</div><div class="sub">Fermer sans accepter</div></div>';
+    ignore.addEventListener('click', ()=>{
+      suggestionsOverlay.classList.remove('open');
+      recordSuggestion({ slotId: slot.id, suggestionId: null, accepted: false, timestamp: Date.now(), title: 'ignored' });
+    });
+    suggestionsListEl.appendChild(ignore);
+  }
+
+  function recordSuggestion(entry){
+    data.suggestionsHistory = data.suggestionsHistory || [];
+    data.suggestionsHistory.unshift(entry);
+    if (data.suggestionsHistory.length > 200) data.suggestionsHistory.length = 200;
+    saveData();
+  }
+
+  /* Manual overlay handlers */
+  const manualOverlay = document.getElementById('manualOverlay');
+  const openManualBtn = document.getElementById('openMenu');
+  const closeManualBtn = document.getElementById('closeManual');
+  const confirmManualBtn = document.getElementById('confirmManual');
+  if (openManualBtn) openManualBtn.addEventListener('click', ()=> manualOverlay.classList.add('open'));
+  if (closeManualBtn) closeManualBtn.addEventListener('click', ()=> manualOverlay.classList.remove('open'));
+  if (manualOverlay) manualOverlay.addEventListener('click', (e)=> { if (e.target === manualOverlay) manualOverlay.classList.remove('open'); });
+
+  if (confirmManualBtn){
+    confirmManualBtn.addEventListener('click', ()=>{
+      const dur = Number(document.getElementById('manual-duration').value || 0);
+      const stat = document.getElementById('manual-stat').value || '';
+      const suggestions = simulateManualSuggestions(dur, stat);
+      manualOverlay.classList.remove('open');
+      recordSuggestion({ slotId: null, suggestionId: 'manual-sim', accepted: false, timestamp: Date.now(), detail: {dur, stat, suggestions} });
+      showGain(stat || STATS[0].key, 0);
+      setTimeout(()=> alert('Suggestions générées ('+suggestions.length+') — voir console (dev) for details.'), 120);
+      console.log('Manual suggestions:', suggestions);
+    });
+  }
+
+  function simulateManualSuggestions(dur, stat){
+    const out = [];
+    if (stat === 'savoir' || !stat){
+      if (dur >= 30) out.push({ title: 'Réviser un chapitre', stat: 'savoir', amt: GAIN.suggestionMajor });
+      else out.push({ title: 'Lire 10 pages', stat: 'savoir', amt: GAIN.suggestionDefault });
+    }
+    if (stat === 'charme' || !stat){
+      out.push({ title: 'Envoyer un message à un ami', stat: 'charme', amt: GAIN.suggestionDefault });
+    }
+    if (out.length===0) out.push({ title: 'Regarder une vidéo thématique', stat: 'habilete', amt: GAIN.suggestionDefault });
+    return out.slice(0,3);
+  }
+
+  function escapeHtml(str){ return String(str).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+
+  /* Intégrations externes : iCloud (CalDAV via backend) + Pronote (polling via backend) */
+  const backendUrlInput = document.getElementById('settings-backend-url');
+  const demoModeInput = document.getElementById('settings-demo-mode');
+  const icloudEmailInput = document.getElementById('settings-icloud-email');
+  const icloudPasswordInput = document.getElementById('settings-icloud-password');
+  const pronoteUserInput = document.getElementById('settings-pronote-user');
+  const pronotePasswordInput = document.getElementById('settings-pronote-password');
+  const syncLogEl = document.getElementById('sync-log');
+
+  function fillSettingsForm(){
+    const s = data.settings || getDefaultSettings();
+    if (backendUrlInput) backendUrlInput.value = s.backendUrl || '';
+    if (demoModeInput) demoModeInput.checked = !!s.demoMode;
+    if (icloudEmailInput) icloudEmailInput.value = s.icloudEmail || '';
+    if (icloudPasswordInput) icloudPasswordInput.value = s.icloudPassword || '';
+    if (pronoteUserInput) pronoteUserInput.value = s.pronoteUser || '';
+    if (pronotePasswordInput) pronotePasswordInput.value = s.pronotePassword || '';
+  }
+
+  function persistSettingsFromForm(){
+    data.settings = {
+      backendUrl: backendUrlInput ? backendUrlInput.value.trim() : '',
+      demoMode: demoModeInput ? demoModeInput.checked : false,
+      icloudEmail: icloudEmailInput ? icloudEmailInput.value.trim() : '',
+      icloudPassword: icloudPasswordInput ? icloudPasswordInput.value : '',
+      pronoteUser: pronoteUserInput ? pronoteUserInput.value.trim() : '',
+      pronotePassword: pronotePasswordInput ? pronotePasswordInput.value : ''
+    };
+    saveData();
+  }
+
+  function logSync(message){
+    data.syncLog = data.syncLog || [];
+    data.syncLog.unshift({ message, ts: new Date().toISOString() });
+    if (data.syncLog.length > 20) data.syncLog.length = 20;
+    saveData();
+    renderSyncLog();
+  }
+
+  function renderSyncLog(){
+    if (!syncLogEl) return;
+    const entries = data.syncLog || [];
+    if (!entries.length){ syncLogEl.innerHTML = ''; return; }
+    syncLogEl.innerHTML = '<strong>Historique de synchronisation :</strong><br>' +
+      entries.map(e=> '· ' + escapeHtml(e.message) + ' <span style="color:#888">(' + new Date(e.ts).toLocaleString('fr-FR') + ')</span>').join('<br>');
+  }
+
+  /* Fusionne des événements importés dans le planning sans dupliquer (même externalId) */
+  function mergeImportedSlots(source, events){
+    let added = 0, updated = 0;
+    events.forEach(ev=>{
+      const existing = data.slots.find(s=> s.source === source && s.externalId === ev.externalId);
+      const payload = {
+        title: ev.title, cat: ev.cat || '', day: ev.day, start: ev.start, end: ev.end,
+        isDeadline: !!ev.isDeadline, importance: ev.importance || '', deadlineDate: ev.deadlineDate || '',
+        anticipationDays: ev.anticipationDays || null, source, externalId: ev.externalId
+      };
+      if (existing){
+        Object.assign(existing, payload);
+        updated++;
+      } else {
+        data.slots.push(Object.assign({ id: source + '-' + ev.externalId, done:false, doneAt:null }, payload));
+        added++;
+      }
+    });
+    saveData();
+    renderSlots();
+    return { added, updated };
+  }
+
+  function demoEventsFor(source){
+    if (source === 'icloud'){
+      return [
+        { externalId: 'demo-1', title: 'Rendez-vous (démo iCloud)', day: '2', start: '10:00', end: '11:00', cat: '' },
+        { externalId: 'demo-2', title: 'Dîner de famille (démo iCloud)', day: '5', start: '19:30', end: '21:30', cat: '' }
+      ];
+    }
+    return [
+      { externalId: 'demo-1', title: 'Devoir de maths (démo Pronote)', day: '1', start: '17:00', end: '17:30', cat: 'savoir', isDeadline:true, importance:'moyen', deadlineDate: new Date(Date.now()+5*86400000).toISOString().slice(0,10) },
+      { externalId: 'demo-2', title: 'Cours SVT (démo Pronote)', day: '3', start: '09:00', end: '10:00', cat: '' }
+    ];
+  }
+
+  async function runSync(source, credentialsOk){
+    persistSettingsFromForm();
+    const s = data.settings;
+    if (s.demoMode || !s.backendUrl){
+      const { added, updated } = mergeImportedSlots(source, demoEventsFor(source));
+      logSync((source==='icloud' ? 'iCloud' : 'Pronote') + ' — mode démo : ' + added + ' événement(s) simulé(s) ajouté(s), ' + updated + ' mis à jour. Configure l’URL du backend pour une vraie synchro.');
+      return;
+    }
+    if (!credentialsOk){
+      logSync((source==='icloud' ? 'iCloud' : 'Pronote') + ' — identifiants manquants.');
+      return;
+    }
+    try{
+      const endpoint = s.backendUrl.replace(/\/$/, '') + '/' + source + '/sync';
+      const body = source === 'icloud'
+        ? { email: s.icloudEmail, password: s.icloudPassword }
+        : { username: s.pronoteUser, password: s.pronotePassword };
+      const res = await fetch(endpoint, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+      const events = Array.isArray(json.events) ? json.events : [];
+      const { added, updated } = mergeImportedSlots(source, events);
+      logSync((source==='icloud' ? 'iCloud' : 'Pronote') + ' — synchro OK : ' + added + ' ajouté(s), ' + updated + ' mis à jour.');
+    }catch(err){
+      logSync((source==='icloud' ? 'iCloud' : 'Pronote') + ' — échec (' + err.message + '). Vérifie l’URL du backend et le endpoint /' + source + '/sync (voir cahier des charges §7/§8), ou active le mode démo.');
+    }
+  }
+
+  const syncICloudBtn = document.getElementById('syncICloudBtn');
+  const syncPronoteBtn = document.getElementById('syncPronoteBtn');
+  if (syncICloudBtn) syncICloudBtn.addEventListener('click', ()=> runSync('icloud', !!(icloudEmailInput.value && icloudPasswordInput.value)));
+  if (syncPronoteBtn) syncPronoteBtn.addEventListener('click', ()=> runSync('pronote', !!(pronoteUserInput.value && pronotePasswordInput.value)));
+  [backendUrlInput, demoModeInput, icloudEmailInput, icloudPasswordInput, pronoteUserInput, pronotePasswordInput].forEach(el=>{
+    if (el) el.addEventListener('change', persistSettingsFromForm);
+  });
+
+  /* Récap de fin de journée */
+  const recapOverlay = document.getElementById('recapOverlay');
+  const recapTrigger = document.getElementById('recapTrigger');
+  const closeRecapBtn = document.getElementById('closeRecap');
+  const recapBody = document.getElementById('recap-body');
+
+  function buildRecap(){
+    const gains = {};
+    (data.statLog || []).filter(l=> isToday(l.ts)).forEach(l=>{ gains[l.cat] = (gains[l.cat]||0) + l.amount; });
+    const contactsToday = data.confidants.filter(c=> isToday(c.lastContact));
+    const slotsToday = data.slots.filter(s=> s.done && isToday(s.doneAt));
+    const journalToday = data.journal.filter(j=> isToday(j.createdAt));
+
+    let html = '<div class="recap-section-title">Stats gagnées</div>';
+    const gainKeys = Object.keys(gains);
+    if (!gainKeys.length){
+      html += '<p class="recap-empty">Aucun gain de stat aujourd’hui.</p>';
+    } else {
+      gainKeys.forEach(k=>{
+        const label = (STATS.find(s=>s.key===k)||{label:k}).label;
+        html += '<div class="recap-stat-line"><span>' + escapeHtml(label) + '</span><span>+' + gains[k] + '</span></div>';
+      });
+    }
+
+    html += '<div class="recap-section-title">Créneaux validés</div>';
+    html += slotsToday.length
+      ? slotsToday.map(s=> '<div class="recap-stat-line"><span>' + escapeHtml(s.title) + '</span><span>' + (s.cat||'—') + '</span></div>').join('')
+      : '<p class="recap-empty">Aucun créneau validé aujourd’hui.</p>';
+
+    html += '<div class="recap-section-title">Contacts pris</div>';
+    html += contactsToday.length
+      ? contactsToday.map(c=> '<div class="recap-stat-line"><span>' + escapeHtml(c.name) + '</span><span>' + (c.goalDone ? '✓ objectif' : '') + '</span></div>').join('')
+      : '<p class="recap-empty">Personne contacté aujourd’hui.</p>';
+
+    html += '<div class="recap-section-title">Journal</div>';
+    html += journalToday.length
+      ? journalToday.map(j=> '<p style="margin-bottom:8px">' + escapeHtml(j.text.slice(0,160)) + (j.text.length>160?'…':'') + '</p>').join('')
+      : '<p class="recap-empty">Pas d’entrée de journal aujourd’hui.</p>';
+
+    return html;
+  }
+
+  if (recapTrigger){
+    recapTrigger.addEventListener('click', ()=>{
+      if (recapBody) recapBody.innerHTML = buildRecap();
+      if (recapOverlay) recapOverlay.classList.add('open');
+      playSfx();
+    });
+  }
+  if (closeRecapBtn) closeRecapBtn.addEventListener('click', ()=> recapOverlay.classList.remove('open'));
+  if (recapOverlay) recapOverlay.addEventListener('click', (e)=> { if (e.target === recapOverlay) recapOverlay.classList.remove('open'); });
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    renderSlots();
+    renderConfidants();
+    renderStats();
+    fillSettingsForm();
+    renderSyncLog();
+  });
+
+  window[API_NAME] = {
+    STATS, LEVEL_STEP, LEVEL_THRESHOLDS, MAX_LEVEL, GAIN,
+    addStat, renderStats,
+    getData: ()=> JSON.parse(JSON.stringify(data)),
+    saveData,
+    recordSuggestion,
+    openSuggestionsForSlot,
+    generateSuggestionsForSlot
+  };
+
+  window.P5TM = window[API_NAME];
+
+})();
+  </script>
+
+</body>
+</html>
