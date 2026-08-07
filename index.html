@@ -218,6 +218,22 @@ body[data-screen]:not([data-screen="home"]) #slash{
 .fiche-section-title:first-of-type{border-top:none;padding-top:0;margin-top:0}
 .item-card.clickable{cursor:pointer}
 .item-card.clickable:hover{filter:brightness(1.04)}
+
+/* Panneau IA (dans Planning) : profil d'intérêts + refs + chat */
+#ai-panel.ai-panel-hidden{display:none}
+.ai-mini-item{background:#fff;color:var(--ink);padding:8px 12px;margin-bottom:6px;display:flex;align-items:flex-start;gap:10px;box-shadow:3px 3px 0 rgba(0,0,0,.25)}
+.ai-mini-item .txt{flex:1;font-size:13px;line-height:1.4}
+.ai-mini-item .txt .ref-title{font-weight:800}
+.ai-mini-item .txt .ref-url{display:block;font-size:11px;color:#555;word-break:break-all}
+.ai-mini-item button{border:none;background:#ddd;color:#333;font-weight:800;font-size:11px;text-transform:uppercase;padding:5px 10px;cursor:pointer;flex-shrink:0}
+.ai-chat-log{max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:10px;background:rgba(0,0,0,.04);margin:8px 0}
+.ai-msg{padding:8px 12px;border-radius:12px;font-size:13px;line-height:1.4;max-width:82%}
+.ai-msg.user{align-self:flex-end;background:var(--red);color:#fff;border-bottom-right-radius:2px}
+.ai-msg.ai{align-self:flex-start;background:#fff;color:var(--ink);border-bottom-left-radius:2px;box-shadow:2px 2px 0 rgba(0,0,0,.15)}
+.ai-msg.ai.pending{opacity:.6;font-style:italic}
+.ai-chat-row{display:flex;gap:8px;align-items:stretch}
+.ai-chat-row input{flex:1;font:inherit;font-size:14px;padding:8px 10px;border:2px solid var(--ink);background:#fff;color:var(--ink)}
+.ai-chat-hint{font-size:12px;color:#666;margin-top:6px}
 .contact-chip{font-size:12px;color:#444;margin-right:10px}
 
 /* filtres de source (planning) */
@@ -469,6 +485,45 @@ body[data-screen]:not([data-screen="home"]) #slash{
           <button type="button" class="tab-filter" data-filter="pronote">Pronote</button>
         </div>
         <div id="slot-list"></div>
+
+        <button type="button" class="p5-btn" id="toggleAiPanel" style="margin-top:18px">🧠 Profil IA & Discussion</button>
+
+        <div id="ai-panel" class="paper form-block ai-panel-hidden">
+          <div class="fiche-section-title">Centres d'intérêt (utilisés pour les suggestions)</div>
+          <p style="font-size:12px;color:#555;margin-bottom:8px">Décris ce que tu aimes, tes objectifs, tes habitudes : l'IA s'en sert pour proposer des activités sur tes créneaux libres.</p>
+          <div class="form-row">
+            <label style="flex:1">Nouvelle note
+              <textarea id="ai-note-input" rows="2" placeholder="Ex : j'aime la moto, la géopolitique, les vidéos de vulgarisation scientifique..." style="font:inherit;font-size:14px;padding:8px 10px;border:2px solid var(--ink);background:#fff;color:var(--ink);resize:vertical"></textarea>
+            </label>
+          </div>
+          <button type="button" class="p5-btn" id="addAiNoteBtn">Ajouter la note</button>
+          <div id="ai-notes-list" style="margin-top:10px"></div>
+
+          <div class="fiche-section-title">Références (vidéos, chaînes, sites...)</div>
+          <div class="form-row">
+            <label>Titre
+              <input type="text" id="ai-ref-title" placeholder="Ex : chaîne YouTube X">
+            </label>
+            <label>Lien (optionnel)
+              <input type="text" id="ai-ref-url" placeholder="https://...">
+            </label>
+          </div>
+          <button type="button" class="p5-btn" id="addAiRefBtn">Ajouter la référence</button>
+          <div id="ai-refs-list" style="margin-top:10px"></div>
+
+          <div class="fiche-section-title">Fichiers texte joints (.txt)</div>
+          <p style="font-size:12px;color:#555;margin-bottom:8px">Leur contenu est envoyé à l'IA en même temps que tes notes et références (limité en taille, voir plus bas).</p>
+          <input type="file" id="ai-file-input" accept=".txt,text/plain" multiple style="font-size:13px">
+          <div id="ai-files-list" style="margin-top:10px"></div>
+
+          <div class="fiche-section-title">Parler à l'IA</div>
+          <div id="ai-chat-log" class="ai-chat-log"></div>
+          <div class="ai-chat-row">
+            <input type="text" id="ai-chat-input" placeholder="Écris un message...">
+            <button type="button" class="p5-btn" id="sendAiChatBtn">Envoyer</button>
+          </div>
+          <p class="ai-chat-hint" id="ai-chat-hint"></p>
+        </div>
       </section>
 
       <!-- CONFIDANTS -->
@@ -965,13 +1020,19 @@ body[data-screen]:not([data-screen="home"]) #slash{
       parsed.statLog = parsed.statLog || [];
       parsed.settings = parsed.settings || getDefaultSettings();
       parsed.syncLog = parsed.syncLog || [];
+      parsed.aiProfile = parsed.aiProfile || getDefaultAiProfile();
+      parsed.aiProfile.notes = parsed.aiProfile.notes || [];
+      parsed.aiProfile.refs = parsed.aiProfile.refs || [];
+      parsed.aiProfile.chat = parsed.aiProfile.chat || [];
+      parsed.aiProfile.files = parsed.aiProfile.files || [];
       return parsed;
     }catch(e){
       return getDefaultData();
     }
   }
   function getDefaultSettings(){ return { backendUrl:'', demoMode:false, icloudEmail:'', icloudPassword:'', pronoteUser:'', pronotePassword:'' }; }
-  function getDefaultData(){ const statsObj = STATS.reduce((a,s)=>{a[s.key]=0;return a;},{}); return { slots:[], confidants:[], stats: statsObj, suggestionsHistory:[], journal:[], statLog:[], settings:getDefaultSettings(), syncLog:[] }; }
+  function getDefaultAiProfile(){ return { notes:[], refs:[], chat:[], files:[] }; }
+  function getDefaultData(){ const statsObj = STATS.reduce((a,s)=>{a[s.key]=0;return a;},{}); return { slots:[], confidants:[], stats: statsObj, suggestionsHistory:[], journal:[], statLog:[], settings:getDefaultSettings(), syncLog:[], aiProfile:getDefaultAiProfile() }; }
   function isToday(dateStr){ if (!dateStr) return false; const d = new Date(dateStr); const n = new Date(); return d.getFullYear()===n.getFullYear() && d.getMonth()===n.getMonth() && d.getDate()===n.getDate(); }
   function saveData(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(data)); }catch(e){} }
 
@@ -1416,10 +1477,22 @@ body[data-screen]:not([data-screen="home"]) #slash{
 
   function openSuggestionsForSlot(slot){
     if (!slot) return;
-    const suggestions = generateSuggestionsForSlot(slot);
-    renderSuggestionsList(slot, suggestions);
+    // Affichage immédiat des suggestions locales (rapide, toujours dispo hors-ligne)
+    const localSuggestions = generateSuggestionsForSlot(slot);
+    renderSuggestionsList(slot, localSuggestions);
     suggestionsOverlay.classList.add('open');
     playSfx();
+
+    // Si un backend IA est configuré (et mode démo désactivé), on tente de les remplacer par des suggestions IA
+    if (aiBackendReady()){
+      fetchAiSuggestionsForSlot(slot).then(aiSuggestions=>{
+        if (!aiSuggestions.length) return;
+        // n'affiche le résultat que si l'overlay est toujours ouvert sur ce même slot
+        if (suggestionsOverlay.classList.contains('open') && suggestionsListEl.dataset.slotId === slot.id){
+          renderSuggestionsList(slot, aiSuggestions);
+        }
+      }).catch(()=>{ /* échec silencieux : les suggestions locales restent affichées */ });
+    }
   }
 
   function generateSuggestionsForSlot(slot){
@@ -1462,6 +1535,7 @@ body[data-screen]:not([data-screen="home"]) #slash{
 
   function renderSuggestionsList(slot, suggestions){
     if (!suggestionsListEl) return;
+    suggestionsListEl.dataset.slotId = slot.id;
     suggestionsListEl.innerHTML = '';
     suggestions.forEach((s, i)=>{
       const li = document.createElement('li');
@@ -1511,23 +1585,33 @@ body[data-screen]:not([data-screen="home"]) #slash{
       const stat = document.getElementById('manual-stat').value || '';
       const suggestions = simulateManualSuggestions(dur, stat);
       manualOverlay.classList.remove('open');
-      recordSuggestion({ slotId: null, suggestionId: 'manual-sim', accepted: false, timestamp: Date.now(), detail: {dur, stat, suggestions} });
-      showGain(stat || STATS[0].key, 0);
-      setTimeout(()=> alert('Suggestions générées ('+suggestions.length+') — voir console (dev) for details.'), 120);
-      console.log('Manual suggestions:', suggestions);
+      // Slot virtuel pour rattacher les suggestions au flux d'affichage habituel
+      const virtualSlot = { id: 'manual-' + Date.now(), title: 'Temps libre (' + dur + ' min)', cat: stat || null };
+      renderSuggestionsList(virtualSlot, suggestions);
+      suggestionsOverlay.classList.add('open');
+      playSfx();
+
+      if (aiBackendReady()){
+        fetchAiSuggestionsForSlot(virtualSlot).then(aiSuggestions=>{
+          if (!aiSuggestions.length) return;
+          if (suggestionsOverlay.classList.contains('open') && suggestionsListEl.dataset.slotId === virtualSlot.id){
+            renderSuggestionsList(virtualSlot, aiSuggestions);
+          }
+        }).catch(()=>{});
+      }
     });
   }
 
   function simulateManualSuggestions(dur, stat){
     const out = [];
     if (stat === 'savoir' || !stat){
-      if (dur >= 30) out.push({ title: 'Réviser un chapitre', stat: 'savoir', amt: GAIN.suggestionMajor });
-      else out.push({ title: 'Lire 10 pages', stat: 'savoir', amt: GAIN.suggestionDefault });
+      if (dur >= 30) out.push({ id:'m-savoir-1', title: 'Réviser un chapitre', stat: 'savoir', amt: GAIN.suggestionMajor, sub: 'Session de révision' });
+      else out.push({ id:'m-savoir-2', title: 'Lire 10 pages', stat: 'savoir', amt: GAIN.suggestionDefault, sub: 'Lecture rapide' });
     }
     if (stat === 'charme' || !stat){
-      out.push({ title: 'Envoyer un message à un ami', stat: 'charme', amt: GAIN.suggestionDefault });
+      out.push({ id:'m-charme-1', title: 'Envoyer un message à un ami', stat: 'charme', amt: GAIN.suggestionDefault, sub: 'Petit geste social' });
     }
-    if (out.length===0) out.push({ title: 'Regarder une vidéo thématique', stat: 'habilete', amt: GAIN.suggestionDefault });
+    if (out.length===0) out.push({ id:'m-habilete-1', title: 'Regarder une vidéo thématique', stat: 'habilete', amt: GAIN.suggestionDefault, sub: 'Apprentissage actif' });
     return out.slice(0,3);
   }
 
@@ -1651,6 +1735,224 @@ body[data-screen]:not([data-screen="home"]) #slash{
   [backendUrlInput, demoModeInput, icloudEmailInput, icloudPasswordInput, pronoteUserInput, pronotePasswordInput].forEach(el=>{
     if (el) el.addEventListener('change', persistSettingsFromForm);
   });
+
+  /* ===================== IA : profil d'intérêts, refs, chat, suggestions ===================== */
+  const toggleAiPanelBtn = document.getElementById('toggleAiPanel');
+  const aiPanel = document.getElementById('ai-panel');
+  if (toggleAiPanelBtn && aiPanel){
+    toggleAiPanelBtn.addEventListener('click', ()=>{
+      const isHidden = aiPanel.classList.toggle('ai-panel-hidden');
+      toggleAiPanelBtn.textContent = isHidden ? '🧠 Profil IA & Discussion' : 'FERMER';
+      if (!isHidden){ renderAiNotes(); renderAiRefs(); renderAiFiles(); renderAiChat(); }
+    });
+  }
+
+  function aiBackendReady(){
+    const s = data.settings;
+    return !!(s.backendUrl && !s.demoMode);
+  }
+
+  /* --- Notes (centres d'intérêt) --- */
+  const aiNoteInput = document.getElementById('ai-note-input');
+  const addAiNoteBtn = document.getElementById('addAiNoteBtn');
+  const aiNotesListEl = document.getElementById('ai-notes-list');
+
+  function renderAiNotes(){
+    if (!aiNotesListEl) return;
+    const notes = data.aiProfile.notes;
+    aiNotesListEl.innerHTML = notes.length ? '' : '<p class="empty-hint">Aucune note pour l’instant.</p>';
+    notes.forEach(n=>{
+      const row = document.createElement('div');
+      row.className = 'ai-mini-item';
+      row.innerHTML = '<div class="txt">' + escapeHtml(n.text) + '</div><button type="button">Suppr.</button>';
+      row.querySelector('button').addEventListener('click', ()=>{
+        data.aiProfile.notes = data.aiProfile.notes.filter(x=> x.id !== n.id);
+        saveData();
+        renderAiNotes();
+      });
+      aiNotesListEl.appendChild(row);
+    });
+  }
+
+  if (addAiNoteBtn){
+    addAiNoteBtn.addEventListener('click', ()=>{
+      const text = (aiNoteInput.value || '').trim();
+      if (!text) return;
+      data.aiProfile.notes.push({ id:'note'+Date.now(), text, createdAt:new Date().toISOString() });
+      saveData();
+      aiNoteInput.value = '';
+      renderAiNotes();
+      playSfx();
+    });
+  }
+
+  /* --- Références (vidéos, chaînes, sites...) --- */
+  const aiRefTitleInput = document.getElementById('ai-ref-title');
+  const aiRefUrlInput = document.getElementById('ai-ref-url');
+  const addAiRefBtn = document.getElementById('addAiRefBtn');
+  const aiRefsListEl = document.getElementById('ai-refs-list');
+
+  function renderAiRefs(){
+    if (!aiRefsListEl) return;
+    const refs = data.aiProfile.refs;
+    aiRefsListEl.innerHTML = refs.length ? '' : '<p class="empty-hint">Aucune référence pour l’instant.</p>';
+    refs.forEach(r=>{
+      const row = document.createElement('div');
+      row.className = 'ai-mini-item';
+      row.innerHTML = '<div class="txt"><span class="ref-title">' + escapeHtml(r.title) + '</span>' +
+                       (r.url ? '<span class="ref-url">' + escapeHtml(r.url) + '</span>' : '') + '</div>' +
+                       '<button type="button">Suppr.</button>';
+      row.querySelector('button').addEventListener('click', ()=>{
+        data.aiProfile.refs = data.aiProfile.refs.filter(x=> x.id !== r.id);
+        saveData();
+        renderAiRefs();
+      });
+      aiRefsListEl.appendChild(row);
+    });
+  }
+
+  if (addAiRefBtn){
+    addAiRefBtn.addEventListener('click', ()=>{
+      const title = (aiRefTitleInput.value || '').trim();
+      const url = (aiRefUrlInput.value || '').trim();
+      if (!title) return;
+      data.aiProfile.refs.push({ id:'ref'+Date.now(), title, url, createdAt:new Date().toISOString() });
+      saveData();
+      aiRefTitleInput.value = '';
+      aiRefUrlInput.value = '';
+      renderAiRefs();
+      playSfx();
+    });
+  }
+
+  /* --- Fichiers texte joints (.txt) --- */
+  const AI_FILE_MAX_CHARS = 20000; // limite par fichier pour rester raisonnable en taille/coût
+  const aiFileInput = document.getElementById('ai-file-input');
+  const aiFilesListEl = document.getElementById('ai-files-list');
+
+  function renderAiFiles(){
+    if (!aiFilesListEl) return;
+    const files = data.aiProfile.files;
+    aiFilesListEl.innerHTML = files.length ? '' : '<p class="empty-hint">Aucun fichier joint.</p>';
+    files.forEach(f=>{
+      const row = document.createElement('div');
+      row.className = 'ai-mini-item';
+      row.innerHTML = '<div class="txt"><span class="ref-title">' + escapeHtml(f.name) + '</span>' +
+                       '<span class="ref-url">' + f.text.length + ' caractères' + (f.truncated ? ' (tronqué)' : '') + '</span></div>' +
+                       '<button type="button">Suppr.</button>';
+      row.querySelector('button').addEventListener('click', ()=>{
+        data.aiProfile.files = data.aiProfile.files.filter(x=> x.id !== f.id);
+        saveData();
+        renderAiFiles();
+      });
+      aiFilesListEl.appendChild(row);
+    });
+  }
+
+  if (aiFileInput){
+    aiFileInput.addEventListener('change', ()=>{
+      const list = Array.from(aiFileInput.files || []);
+      list.forEach(file=>{
+        const reader = new FileReader();
+        reader.onload = ()=>{
+          let text = String(reader.result || '');
+          let truncated = false;
+          if (text.length > AI_FILE_MAX_CHARS){ text = text.slice(0, AI_FILE_MAX_CHARS); truncated = true; }
+          data.aiProfile.files.push({ id:'file'+Date.now()+Math.random().toString(36).slice(2,7), name:file.name, text, truncated, createdAt:new Date().toISOString() });
+          saveData();
+          renderAiFiles();
+        };
+        reader.readAsText(file);
+      });
+      aiFileInput.value = '';
+      playSfx();
+    });
+  }
+
+  /* --- Appel backend IA générique (nécessite un backend déployé, pas de mode démo) --- */
+  async function callAiBackend(path, body){
+    const s = data.settings;
+    const endpoint = s.backendUrl.replace(/\/$/, '') + path;
+    const res = await fetch(endpoint, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
+  }
+
+  function aiProfilePayload(){
+    return {
+      notes: data.aiProfile.notes.map(n=> n.text),
+      refs: data.aiProfile.refs.map(r=> ({ title:r.title, url:r.url })),
+      files: data.aiProfile.files.map(f=> ({ name:f.name, text:f.text }))
+    };
+  }
+
+  /* --- Chat --- */
+  const aiChatInput = document.getElementById('ai-chat-input');
+  const sendAiChatBtn = document.getElementById('sendAiChatBtn');
+  const aiChatLogEl = document.getElementById('ai-chat-log');
+  const aiChatHintEl = document.getElementById('ai-chat-hint');
+
+  function renderAiChat(){
+    if (!aiChatLogEl) return;
+    aiChatLogEl.innerHTML = '';
+    data.aiProfile.chat.forEach(m=>{
+      const div = document.createElement('div');
+      div.className = 'ai-msg ' + (m.role === 'user' ? 'user' : 'ai') + (m.pending ? ' pending' : '');
+      div.textContent = m.text;
+      aiChatLogEl.appendChild(div);
+    });
+    aiChatLogEl.scrollTop = aiChatLogEl.scrollHeight;
+    if (aiChatHintEl) aiChatHintEl.textContent = aiBackendReady() ? '' : 'Configure l’URL du backend (Options) et désactive le mode démo pour parler à l’IA en direct.';
+  }
+
+  async function sendAiChatMessage(){
+    const text = (aiChatInput.value || '').trim();
+    if (!text) return;
+    aiChatInput.value = '';
+    data.aiProfile.chat.push({ id:'c'+Date.now(), role:'user', text, ts:Date.now() });
+    saveData();
+    renderAiChat();
+
+    if (!aiBackendReady()){
+      data.aiProfile.chat.push({ id:'c'+Date.now()+'-local', role:'ai', text: 'Pas de backend configuré (ou mode démo actif) — je ne peux pas répondre en direct. Ajoute l’URL du backend dans Options pour activer la discussion.', ts:Date.now() });
+      saveData();
+      renderAiChat();
+      return;
+    }
+
+    const pendingId = 'c'+Date.now()+'-pending';
+    data.aiProfile.chat.push({ id:pendingId, role:'ai', text:'…', ts:Date.now(), pending:true });
+    renderAiChat();
+
+    try{
+      const history = data.aiProfile.chat.filter(m=> !m.pending).slice(-20).map(m=> ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text }));
+      const json = await callAiBackend('/ai/chat', { message: text, history, profile: aiProfilePayload() });
+      const reply = (json && (json.reply || json.message)) || 'Réponse vide.';
+      data.aiProfile.chat = data.aiProfile.chat.filter(m=> m.id !== pendingId);
+      data.aiProfile.chat.push({ id:'c'+Date.now()+'-ai', role:'ai', text: reply, ts:Date.now() });
+    }catch(err){
+      data.aiProfile.chat = data.aiProfile.chat.filter(m=> m.id !== pendingId);
+      data.aiProfile.chat.push({ id:'c'+Date.now()+'-err', role:'ai', text: 'Erreur de connexion au backend (' + err.message + '). Vérifie l’URL et l’endpoint /ai/chat côté serveur.', ts:Date.now() });
+    }
+    saveData();
+    renderAiChat();
+  }
+
+  if (sendAiChatBtn) sendAiChatBtn.addEventListener('click', sendAiChatMessage);
+  if (aiChatInput) aiChatInput.addEventListener('keydown', (e)=>{ if (e.key === 'Enter'){ e.preventDefault(); sendAiChatMessage(); } });
+
+  /* --- Suggestions IA (backend) : utilisées pour enrichir/remplacer les suggestions locales --- */
+  async function fetchAiSuggestionsForSlot(slot){
+    const json = await callAiBackend('/ai/suggest', { slot: { title: slot.title, cat: slot.cat, tag: slot.tag || null }, profile: aiProfilePayload() });
+    const list = Array.isArray(json.suggestions) ? json.suggestions : [];
+    return list.slice(0,3).map((s, i)=> ({
+      id: 'ai-' + i + '-' + Date.now(),
+      title: s.title || 'Suggestion IA',
+      stat: s.stat || (STATS.find(x=>x.key===slot.cat) ? slot.cat : STATS[0].key),
+      amt: Number(s.amt) || GAIN.suggestionDefault,
+      sub: s.sub || 'Suggestion IA'
+    }));
+  }
 
   /* Récap de fin de journée */
   const recapOverlay = document.getElementById('recapOverlay');
